@@ -1,27 +1,32 @@
 package com.cirin0.storecomponents.controller;
 
 import com.cirin0.storecomponents.model.Order;
+import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import java.util.List;
 
 @Controller
 @RequestMapping("/orders")
 public class OrderController {
-  private final OrderService orderService;
-
-  public OrderController(OrderService orderService) {
-    this.orderService = orderService;
-  }
+  @Autowired
+  private OrderService orderService;
 
   @GetMapping
-  public List<Order> getOrdersForUser() {
-    return orderService.getAllOrders();
+  public List<Order> getOrdersForUser(Authentication auth) {
+    User user = (User) auth.getPrincipal();
+    return orderService.getOrdersForUser(user.getId());
   }
 
   @PostMapping
-  public void createOrder(@RequestBody Order order) {
-    orderService.createOrder(order);
+  public Order createOrder(@RequestBody Order order) {
+    return orderService.createOrder(order);
   }
 }

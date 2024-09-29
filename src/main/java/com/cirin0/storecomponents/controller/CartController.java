@@ -1,25 +1,46 @@
 package com.cirin0.storecomponents.controller;
 
-import com.cirin0.storecomponents.model.Cart;
+import com.cirin0.storecomponents.model.Product;
 import com.cirin0.storecomponents.service.CartService;
+import com.cirin0.storecomponents.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
+@RequestMapping("/cart")
 public class CartController {
-  private final CartService cartService;
+  @Autowired
+  private CartService cartService;
 
-  public CartController(CartService cartService) {
-    this.cartService = cartService;
+  @Autowired
+  private ProductService productService;
+
+  @GetMapping
+  public String showNotLoggedInMessage() {
+    return "Please log in to access your cart";
   }
 
-  @GetMapping("/cart")
-  public List<Cart> getUserCart(String username) {
-    return cartService.getUserCart(username);
+  @PostMapping("/{cartId}/add/{productId}")
+  public String addToCart(@PathVariable Long cartId, @PathVariable Long productId, @RequestParam int quantity) {
+    Product product = productService.getProductById(productId);
+    cartService.addToCart(cartId, product, quantity);
+    return "Product added to cart";
   }
 
-  //@GetMapping("/cart/{productId}")
-  //public Cart deleteProductFromCart(String username, Long productId) {
-  //  return cartService.deleteProductFromCart(username, productId);
-  //}
+  @DeleteMapping("/{cartId}/remove/{productId}")
+  public String removeFromCart(@PathVariable Long cartId, @PathVariable Long cartItemId) {
+    cartService.removeFromCart(cartId, cartItemId);
+    return "Product removed from cart";
+  }
+
+  @GetMapping("/{cartId}/total")
+  public double getCartTotal(@PathVariable Long cartId) {
+    return cartService.getCartsTotalPrice(cartId);
+  }
+
+  @GetMapping("/{cartId}/clear")
+  public String clearCart(@PathVariable Long cartId) {
+    cartService.clearCart(cartId);
+    return "Cart cleared";
+  }
 }

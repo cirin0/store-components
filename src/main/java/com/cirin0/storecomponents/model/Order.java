@@ -1,8 +1,8 @@
 package com.cirin0.storecomponents.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.Data;
+
 import java.util.List;
 
 @Data
@@ -13,10 +13,8 @@ public class Order {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotEmpty
-  @NotNull
-  private String customerName;
-  private String address;
+  @Column(name = "user_id")
+  private Long userId;
 
   @OneToMany(cascade = CascadeType.ALL)
   private List<Product> products;

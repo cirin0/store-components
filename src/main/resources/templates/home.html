@@ -1,15 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ua" xmlns:th="http://www.thymeleaf.org">
 <head>
+	<meta charset="UTF-8">
 	<title>Online Store</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-<h1>Product Catalog</h1>
-<ul>
-	<li th:each="product : ${products}">
-		<a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}">Product Name</a>
-		<span th:text="${product.price}">Price</span>
-	</li>
-</ul>
+<header>
+	<h1>Інтернет магазин комп'ютерних комплектуючих</h1>
+</header>
+
+<main>
+	<div th:fragment="slider">
+	</div>
+
+	<section>
+		<h2>Категорії товарів</h2>
+		<ul>
+			<li th:each="category : ${categories}">
+				<a th:href="@{/products/{categoryId}(categoryId=${category.id})}">
+					<span th:text="${category.name}"></span>
+				</a>
+			</li>
+		</ul>
+	</section>
+
+	<section>
+		<h2>Популярні товари</h2>
+		<div th:fragment="products">
+		</div>
+	</section>
+</main>
+
+<footer>
+</footer>
+
+<script th:src="@{/js/script.js}"></script>
 </body>
 </html>

@@ -3,7 +3,6 @@ package com.cirin0.storecomponents.controller;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 

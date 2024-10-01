@@ -14,7 +14,7 @@ public class ReviewService {
   }
 
   public List<Review> getReviewsByProduct(Long productId) {
-    return reviewRepository.findByProduct_Id(productId);
+    return reviewRepository.findByProductId(productId);
   }
 
   public Review addReview(Long productId, Review review) {

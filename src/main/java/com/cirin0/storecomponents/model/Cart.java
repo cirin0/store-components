@@ -8,13 +8,18 @@ import java.util.List;
 
 @Data
 @Entity
+@Table(name = "carts")
 public class Cart {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  private List<CartItem> items = new ArrayList<>();
+  @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+  private List<CartItem> items;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
   public void addItem(CartItem item){
     items.add(item);

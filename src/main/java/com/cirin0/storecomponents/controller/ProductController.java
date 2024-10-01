@@ -15,11 +15,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-  @Autowired
-  private ProductService productService;
+
+  private final ProductService productService;
+  private final CategoryService categoryService;
 
   @Autowired
-  private CategoryService categoryService;
+  public ProductController(ProductService productService, CategoryService categoryService) {
+    this.productService = productService;
+    this.categoryService = categoryService;
+  }
 
   @GetMapping
   public List<Product> getProducts() {

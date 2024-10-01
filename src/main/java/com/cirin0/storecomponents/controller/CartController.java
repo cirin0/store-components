@@ -3,6 +3,7 @@ package com.cirin0.storecomponents.controller;
 import com.cirin0.storecomponents.model.Product;
 import com.cirin0.storecomponents.service.CartService;
 import com.cirin0.storecomponents.service.ProductService;
+import com.cirin0.storecomponents.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,9 @@ public class CartController {
 
   @Autowired
   private ProductService productService;
+
+  @Autowired
+  private UserService userService;
 
   @GetMapping
   public String showNotLoggedInMessage() {

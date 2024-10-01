@@ -5,14 +5,14 @@ import lombok.*;
 
 @Data
 @Entity
-@Table(name = "review")
+@Table(name = "reviews")
 public class Review {
   @Id
   private Long id;
   private String review;
   private int rating;
   @ManyToOne
-  @JoinColumn(name = "product")
+  @JoinColumn(name = "product_id")
   private Product product;
 
   public void setProduct_Id(Long productId) {

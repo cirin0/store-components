@@ -1,38 +1,38 @@
 package com.cirin0.storecomponents.controller;
 
-import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.catalina.User;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+
+@RequestMapping("/auth")
 public class AuthController {
-  @Autowired
-  private UserService userService;
+  private final UserService userService;
 
-  @GetMapping("/auth/registerU")
-  public String showRegisterForm(Model model) {
-    model.addAttribute("message", "Please register to access the store");
-    return "register";
+  public AuthController(UserService userService) {
+    this.userService = userService;
   }
 
-  @GetMapping("/auth/loginU")
-  public String showLoginForm(Model model) {
-    model.addAttribute("message", "Please log in to access the store");
-    return "redirect:/login";
+  /*
+  @GetMapping("/login")
+  public String login(@RequestParam String username, @RequestParam String password) {
+    return userService.login(username, password);
   }
-
+  */
+  /*
+  @PostMapping("/register")
+  public String register(@RequestBody User user) {
+    return userService.register(user);
+  }
+   */
   @GetMapping("/register")
-  public ResponseEntity<User> register(@RequestParam User user) {
-    return ResponseEntity.ok(userService.registerUser(user));
+  public String register() {
+   return "User registered";
   }
 
   @GetMapping("/login")
-  public ResponseEntity<User> login(@RequestParam User user) {
-    return ResponseEntity.ok(userService.findByUsername(user.getUsername()).orElseThrow());
+  public String login() {
+    return "User logged in";
   }
 }

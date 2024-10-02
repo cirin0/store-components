@@ -22,4 +22,9 @@ public class ReviewController {
   public Review addReview(@PathVariable Long productId, Review review) {
     return reviewService.addReview(productId, review);
   }
+
+  @DeleteMapping("/{reviewId}")
+  public void deleteReview(@PathVariable Long productId, @PathVariable Long reviewId) {
+    reviewService.deleteReview(productId, reviewId);
+  }
 }

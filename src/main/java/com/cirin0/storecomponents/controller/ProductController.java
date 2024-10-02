@@ -4,6 +4,7 @@ import com.cirin0.storecomponents.model.Category;
 import com.cirin0.storecomponents.model.Product;
 import com.cirin0.storecomponents.service.CategoryService;
 import com.cirin0.storecomponents.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,16 +15,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
+@RequiredArgsConstructor
 public class ProductController {
 
   private final ProductService productService;
   private final CategoryService categoryService;
-
+  /*
   @Autowired
   public ProductController(ProductService productService, CategoryService categoryService) {
     this.productService = productService;
     this.categoryService = categoryService;
   }
+
+   */
 
   @GetMapping
   public List<Product> getProducts() {

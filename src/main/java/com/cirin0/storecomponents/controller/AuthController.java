@@ -1,11 +1,11 @@
 package com.cirin0.storecomponents.controller;
 
 import com.cirin0.storecomponents.service.UserService;
-import org.apache.catalina.User;
+import com.cirin0.storecomponents.model.User;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-
 @RequestMapping("/auth")
 public class AuthController {
   private final UserService userService;
@@ -14,25 +14,21 @@ public class AuthController {
     this.userService = userService;
   }
 
-  /*
-  @GetMapping("/login")
-  public String login(@RequestParam String username, @RequestParam String password) {
-    return userService.login(username, password);
+  @GetMapping("/register-form")
+  public String showRegistrationForm(Model model) {
+    model.addAttribute("user", new User());
+    return "register";
   }
-  */
-  /*
+/*
   @PostMapping("/register")
-  public String register(@RequestBody User user) {
-    return userService.register(user);
+  public String registerUser(@ModelAttribute User user) {
+    user.setRole("ROLE_USER");
+    userService.save(user);
+    return "redirect:/login";
   }
-   */
-  @GetMapping("/register")
-  public String register() {
-   return "User registered";
-  }
-
-  @GetMapping("/login")
-  public String login() {
-    return "User logged in";
+*/
+  @GetMapping("/login-form")
+  public String showLoginForm() {
+    return "redirect:/login";
   }
 }

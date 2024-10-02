@@ -1,50 +1,27 @@
 package com.cirin0.storecomponents.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 
-@Data
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CartItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "cart_id")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "cart_id", nullable = false)
   private Cart cart;
 
-  @ManyToOne
-  @JoinColumn(name = "product_id")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id", nullable = false)
   private Product product;
 
   private int quantity;
-
-  public CartItem() {
-  }
-
-  public CartItem(Product product, int quantity) {
-    this.product = product;
-    this.quantity = quantity;
-  }
-
-
-  //@ManyToOne
-  //@JoinColumn(name = "product_id")
-  //private Product product;
-//
-  //private int quantity;
-//
-  //public CartItem() {
-  //}
-//
-  //public CartItem(Product product, int quantity) {
-  //  this.product = product;
-  //  this.quantity = quantity;
-  //}
-
-  public double getTotalPrice() {
-    return product.getPrice() * this.quantity;
-  }
 }

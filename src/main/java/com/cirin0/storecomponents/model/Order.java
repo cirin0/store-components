@@ -3,6 +3,7 @@ package com.cirin0.storecomponents.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -13,9 +14,15 @@ public class Order {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "user_id")
-  private Long userId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  private List<Product> products;
+  @Column(nullable = false)
+  private LocalDateTime orderDate = LocalDateTime.now();
+
+  private double totalPrice;
+
+  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+  private List<OrderItem> items;
 }

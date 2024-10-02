@@ -3,7 +3,8 @@ package com.cirin0.storecomponents.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
-import java.util.List;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -13,27 +14,17 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String username;
-
   @Email
+  @Column(unique = true, nullable = false)
   private String email;
+
+  @Column(nullable = false)
   private String password;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  private List<Cart> carts;
+  private String firstName;
 
-  public User() {
-  }
+  private String lastName;
 
-  public User(String username, String email, String encodedPassword) {
-    this.username = username;
-    this.email = email;
-    this.password = encodedPassword;
-  }
+  private LocalDateTime createdAt = LocalDateTime.now();
 
-  //@ManyToOne(fetch = FetchType.EAGER)
-  //@JoinTable(name = "user_role",
-  //        joinColumns = @JoinColumn(name = "user_id"),
-  //        inverseJoinColumns = @JoinColumn(name = "role_id"))
-  //private Set<Role> roles = new HashSet<>();
 }

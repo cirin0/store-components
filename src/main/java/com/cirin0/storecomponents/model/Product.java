@@ -2,21 +2,24 @@ package com.cirin0.storecomponents.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import jakarta.validation.constraints.*;
 
 @Data
 @Entity
-//@Table(name = "products")
 public class Product {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(nullable = false)
   private String name;
-  private  String description;
+
+  private String description;
+
+  @Column(nullable = false)
   private double price;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id")
   private Category category;
+
 }

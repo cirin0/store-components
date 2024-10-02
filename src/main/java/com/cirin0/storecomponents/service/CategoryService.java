@@ -2,23 +2,40 @@ package com.cirin0.storecomponents.service;
 
 import com.cirin0.storecomponents.model.Category;
 import com.cirin0.storecomponents.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
-  private static CategoryRepository categoryRepository;
 
-  public CategoryService(CategoryRepository categoryRepository) {
-    CategoryService.categoryRepository = categoryRepository;
-  }
+  private final CategoryRepository categoryRepository;
 
-  public static List<Category> getAllCategories() {
+  public List<Category> getAllCategories() {
     return categoryRepository.findAll();
   }
 
   public Category getCategoryById(Long id) {
-    return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+    return categoryRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Category not found"));
+  }
+
+  public Category createCategory(Category category) {
+    return categoryRepository.save(category);
+  }
+
+  public Category updateCategory(Long id, Category updatedCategory) {
+    return categoryRepository.findById(id)
+        .map(category -> {
+          category.setName(updatedCategory.getName());
+          return categoryRepository.save(category);
+        })
+        .orElseThrow(() -> new RuntimeException("Category not found with id " + id));
+  }
+
+  public void deleteCategory(Long id) {
+    categoryRepository.deleteById(id);
   }
 }

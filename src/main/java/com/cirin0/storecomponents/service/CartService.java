@@ -3,43 +3,79 @@ package com.cirin0.storecomponents.service;
 import com.cirin0.storecomponents.model.Cart;
 import com.cirin0.storecomponents.model.CartItem;
 import com.cirin0.storecomponents.model.Product;
+import com.cirin0.storecomponents.repository.CartItemRepository;
 import com.cirin0.storecomponents.repository.CartRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CartService {
-  @Autowired
-  private CartRepository cartRepository;
+  private final CartRepository cartRepository;
+  private final CartItemRepository cartItemRepository;
+  private final ProductService productService;
 
-  public Cart getCartById(Long id) {
-    Optional<Cart> cart = cartRepository.findById(id);
-    return cart.orElseGet(Cart::new);
+  public Optional<Cart> getCartByUserId(Long userId) {
+    return cartRepository.findByUserId(userId);
   }
 
-  public void addToCart(Long cartId, Product product, int quantity){
-    Cart cart = getCartById(cartId);
-    CartItem cartItem = new CartItem(product, quantity);
-    cart.addItem(cartItem);
+  public Cart createCart(Cart cart) {
+    return cartRepository.save(cart);
+  }
+
+  public void deleteCart(Long id) {
+    cartRepository.deleteById(id);
+  }
+
+  public CartItem addProductToCart(Long cartId, Long productId, int quantity) {
+    Cart cart = cartRepository.findById(cartId)
+        .orElseThrow(() -> new RuntimeException("Cart not found with id " + cartId));
+
+    Optional<CartItem> existingCartItem = cart.getCartItems().stream()
+        .filter(ci -> ci.getProduct().getId().equals(productId))
+        .findFirst();
+
+    if (existingCartItem.isPresent()) {
+      CartItem itemToUpdate = existingCartItem.get();
+      itemToUpdate.setQuantity(itemToUpdate.getQuantity() + quantity);
+      return cartItemRepository.save(itemToUpdate);
+    } else {
+      Product product = productService.getProductById(productId);
+      if (product == null) {
+        throw new RuntimeException("Product not found with id " + productId);
+      }
+      // TODO - fix maybe
+
+      //.orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
+
+      CartItem newCartItem = CartItem.builder()
+          .cart(cart)
+          .product(product)
+          .quantity(quantity)
+          .build();
+
+      return cartItemRepository.save(newCartItem);
+    }
+  }
+
+  public void removeCartItem(Long cartItemId) {
+    cartItemRepository.deleteById(cartItemId);
+  }
+
+  public void clearCart(Long cartId) {
+    Cart cart = cartRepository.findById(cartId)
+        .orElseThrow(() -> new RuntimeException("Cart not found " + cartId));
+    cart.getCartItems().clear();
     cartRepository.save(cart);
   }
 
-  public void removeFromCart(Long cartId, Long cartItemId){
-    Cart cart = getCartById(cartId);
-    cart.getItems().removeIf(item -> item.getId().equals(cartItemId));
-    cartRepository.save(cart);
-  }
-
-  public void clearCart(Long cartId){
-    Cart cart = getCartById(cartId);
-    cart.getItems().clear();
-    cartRepository.save(cart);
-  }
-
-  public double getCartsTotalPrice(Long cartId){
-    Cart cart = getCartById(cartId);
-    return cart.getTotalPrice();
+  public double calculateTotalPrice(Long cartId) {
+    Cart cart = cartRepository.findById(cartId)
+        .orElseThrow(() -> new RuntimeException("Cart not found " + cartId));
+    return cart.getCartItems().stream()
+        .mapToDouble(cartItem -> cartItem.getProduct().getPrice() * cartItem.getQuantity())
+        .sum();
   }
 }

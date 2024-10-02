@@ -1,34 +1,52 @@
 package com.cirin0.storecomponents.service;
 
-import com.cirin0.storecomponents.model.Cart;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Collections;
+
+import java.util.List;
 
 @Service
-public class UserService implements UserDetailsService {
-  @Autowired
-  private UserRepository userRepository;
+@RequiredArgsConstructor
+public class UserService {
 
-  @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-        Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
+  private final UserRepository userRepository;
+
+  private String encryptPassword(String password) {
+    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    return bCryptPasswordEncoder.encode(password);
   }
-  /*
-  public User save(User user) {
-    user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-    userRepository.save(user);
-    return user;
+
+  public List<User> getUsers() {
+    return userRepository.findAll();
   }
-  */
+
+  public User getUserById(Long id) {
+    return userRepository.findById(id).orElse(null);
+  }
+
+  public User createUser(User user) {
+    //TODO: Encrypt password
+    user.setPassword(encryptPassword(user.getPassword()));
+    return userRepository.save(user);
+  }
+
+  public User updateUser(Long id, User updatedUser) {
+    return userRepository.findById(id)
+        .map(user -> {
+          user.setEmail(updatedUser.getEmail());
+          user.setPassword(encryptPassword(updatedUser.getPassword()));
+          user.setFirstName(updatedUser.getFirstName());
+          user.setLastName(updatedUser.getLastName());
+          user.setCreatedAt(updatedUser.getCreatedAt());
+          return userRepository.save(user);
+        })
+        .orElseThrow(() -> new RuntimeException("User not found with id " + id));
+  }
+
+  public void deleteUser(Long id) {
+    userRepository.deleteById(id);
+  }
 }

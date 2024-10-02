@@ -2,25 +2,26 @@ package com.cirin0.storecomponents.controller;
 
 import com.cirin0.storecomponents.model.Review;
 import com.cirin0.storecomponents.service.ReviewService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/products/{productId}/reviews")
+@RequiredArgsConstructor
 public class ReviewController {
-  @Autowired
-  private ReviewService reviewService;
+
+  private final ReviewService reviewService;
 
   @GetMapping
   public List<Review> getReviewsByProduct(@PathVariable Long productId) {
-    return reviewService.getReviewsByProduct(productId);
+    return reviewService.getReviewsByProductId(productId);
   }
 
   @PostMapping
   public Review addReview(@PathVariable Long productId, Review review) {
-    return reviewService.addReview(productId, review);
+    return reviewService.createReview(productId, review);
   }
 
   @DeleteMapping("/{reviewId}")

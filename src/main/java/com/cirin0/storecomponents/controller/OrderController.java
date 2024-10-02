@@ -3,6 +3,7 @@ package com.cirin0.storecomponents.controller;
 import com.cirin0.storecomponents.model.Order;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.service.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,10 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/orders")
+@RequiredArgsConstructor
 public class OrderController {
-  @Autowired
-  private OrderService orderService;
-
+  private final OrderService orderService;
+  /*
   @GetMapping
   public List<Order> getOrdersForUser(Authentication auth) {
     User user = (User) auth.getPrincipal();
@@ -29,4 +30,6 @@ public class OrderController {
   public Order createOrder(@RequestBody Order order) {
     return orderService.createOrder(order);
   }
+
+   */
 }

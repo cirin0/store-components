@@ -4,7 +4,6 @@ import com.cirin0.storecomponents.model.Order;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,17 +18,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderController {
   private final OrderService orderService;
-  /*
+
   @GetMapping
-  public List<Order> getOrdersForUser(Authentication auth) {
-    User user = (User) auth.getPrincipal();
-    return orderService.getOrdersForUser(user.getId());
+  public List<Order> getAllOrders() {
+    return orderService.getAllOrders();
   }
 
-  @PostMapping
-  public Order createOrder(@RequestBody Order order) {
+  @GetMapping("/{id}")
+  public Order getOrderById(Long id) {
+    return orderService.getOrderById(id);
+  }
+
+  @PostMapping("/create")
+  public Order createOrder(@RequestBody Order order, Authentication authentication) {
+    User user = (User) authentication.getPrincipal();
+    order.setUser(user);
     return orderService.createOrder(order);
   }
-
-   */
 }

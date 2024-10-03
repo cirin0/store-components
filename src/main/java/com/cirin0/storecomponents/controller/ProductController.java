@@ -1,15 +1,9 @@
 package com.cirin0.storecomponents.controller;
 
-import com.cirin0.storecomponents.model.Category;
 import com.cirin0.storecomponents.model.Product;
-import com.cirin0.storecomponents.service.CategoryService;
 import com.cirin0.storecomponents.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,15 +13,6 @@ import java.util.List;
 public class ProductController {
 
   private final ProductService productService;
-  private final CategoryService categoryService;
-  /*
-  @Autowired
-  public ProductController(ProductService productService, CategoryService categoryService) {
-    this.productService = productService;
-    this.categoryService = categoryService;
-  }
-
-   */
 
   @GetMapping
   public List<Product> getProducts() {
@@ -39,15 +24,18 @@ public class ProductController {
     return productService.getProductById(id);
   }
 
-  @GetMapping("/categories")
-  public List<Category> getCategories() {
-    return categoryService.getAllCategories();
+  @PostMapping("/create")
+  public Product createProduct(@RequestBody Product product) {
+    return productService.createProduct(product);
   }
 
-  @GetMapping("/category/{id}")
-  public Category getCategoryById(@PathVariable Long id) {
-    return categoryService.getCategoryById(id);
+  @PutMapping("/{id}")
+  public Product updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
+    return productService.updateProduct(id, updatedProduct);
   }
 
-
+  @DeleteMapping("/{id}")
+  public void deleteProduct(@PathVariable Long id) {
+    productService.deleteProduct(id);
+  }
 }

@@ -3,6 +3,8 @@ package com.cirin0.storecomponents.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 public class Review {
@@ -14,10 +16,19 @@ public class Review {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id", nullable = false)
+  private Product product;
+
   private String review;
+
+  @Column(nullable = false)
   private int rating;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_id")
-  private Product product;
+  @Column(nullable = false)
+  private LocalDateTime createdAt = LocalDateTime.now();
 }
+
+/*
+Розібратись з цим до кінця
+ */

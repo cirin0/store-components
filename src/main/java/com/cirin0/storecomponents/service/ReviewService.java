@@ -2,6 +2,7 @@ package com.cirin0.storecomponents.service;
 
 import com.cirin0.storecomponents.model.Product;
 import com.cirin0.storecomponents.model.Review;
+import com.cirin0.storecomponents.repository.ProductRepository;
 import com.cirin0.storecomponents.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,14 +15,16 @@ import java.util.Optional;
 public class ReviewService {
 
   private final ReviewRepository reviewRepository;
-  private final ProductService productService;
+  //private final ProductService productService;
+  private final ProductRepository productRepository;
 
   public List<Review> getReviewsByProductId(Long productId) {
     return reviewRepository.findByProductId(productId);
   }
 
+  // Пофіксити метод
   public Review createReview(Long productId, Review review) {
-    Product product = productService.getProductById(productId);
+    Product product = productRepository.findById(productId).orElse(null);
     if (product == null) {
       throw new IllegalArgumentException("Product not found");
     }

@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -24,12 +26,10 @@ public class UserController {
     return userService.getUsers().toString();
   }
 
+  // Пофіксити метод
   @GetMapping("/{userId}")
-  public String showUser(@PathVariable Long userId) {
-    if (userId == null) {
-      return "User not found";
-    }
-    return userService.getUserById(userId).toString();
+  public User showUser(@PathVariable Long userId) {
+    return userService.getUserById(userId);
   }
 
   @PutMapping("/{userId}")

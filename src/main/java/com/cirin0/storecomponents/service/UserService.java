@@ -19,7 +19,7 @@ public class UserService {
     return bCryptPasswordEncoder.encode(password);
   }
 
-  public List<User> getUsers() {
+  public List<User> getAllUsers() {
     return userRepository.findAll();
   }
 
@@ -29,7 +29,6 @@ public class UserService {
   }
 
   public User createUser(User user) {
-    //TODO: Encrypt password
     user.setPassword(encryptPassword(user.getPassword()));
     return userRepository.save(user);
   }
@@ -41,7 +40,6 @@ public class UserService {
           user.setPassword(encryptPassword(updatedUser.getPassword()));
           user.setFirstName(updatedUser.getFirstName());
           user.setLastName(updatedUser.getLastName());
-          user.setCreatedAt(updatedUser.getCreatedAt());
           return userRepository.save(user);
         })
         .orElseThrow(() -> new RuntimeException("User not found with id " + id));

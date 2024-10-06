@@ -3,7 +3,6 @@ package com.cirin0.storecomponents.service;
 import com.cirin0.storecomponents.model.Order;
 import com.cirin0.storecomponents.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +21,8 @@ public class OrderService {
   }
 
   public Order createOrder(Order order) {
-    // Calculate total price from order items
-    // ... (implementation for calculating total price)
+    // 1. Calculate the total price based on order items.
+    // 2. Check product stock levels and update accordingly.
     return orderRepository.save(order);
   }
 }

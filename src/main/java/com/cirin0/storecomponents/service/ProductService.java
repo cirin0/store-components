@@ -1,35 +1,25 @@
 package com.cirin0.storecomponents.service;
 
 import com.cirin0.storecomponents.model.Product;
-import com.cirin0.storecomponents.model.Review;
 import com.cirin0.storecomponents.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
   private final ProductRepository productRepository;
-  private final ReviewService reviewService;
 
   public List<Product> getAllProducts() {
     return productRepository.findAll();
   }
 
-  // Пофіксити метод
-  public Product getProductById(Long id) {
-    //return productRepository.findById(id)
-    //    .orElseThrow(() -> new RuntimeException("Product not found"));
-    Product product = productRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
-    Set<Review> reviews = Set.copyOf(reviewService.getReviewsByProductId(id));
-    product.setReviews(reviews);
-    return product;
+  public Optional<Product> getProductById(Long id) {
+    return productRepository.findById(id);
   }
 
   public Product createProduct(Product product) {

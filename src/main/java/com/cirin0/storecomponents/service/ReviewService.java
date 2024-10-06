@@ -15,41 +15,40 @@ import java.util.Optional;
 public class ReviewService {
 
   private final ReviewRepository reviewRepository;
-  //private final ProductService productService;
   private final ProductRepository productRepository;
 
   public List<Review> getReviewsByProductId(Long productId) {
     return reviewRepository.findByProductId(productId);
   }
+  public Optional<Review> getReviewById(Long reviewId) {
+    return reviewRepository.findById(reviewId);
+  }
 
   // Пофіксити метод
   public Review createReview(Long productId, Review review) {
-    Product product = productRepository.findById(productId).orElse(null);
-    if (product == null) {
-      throw new IllegalArgumentException("Product not found");
-    }
-    review.setProduct(product);
-    return reviewRepository.save(review);
-  }
-
-  public void deleteReview(Long productId, Long reviewId) {
-    Optional<Review> review = reviewRepository.findById(reviewId);
-    if (review.isPresent() && review.get().getProduct().getId().equals(productId)) {
-      reviewRepository.deleteById(reviewId);
+    Optional<Product> productOptional = productRepository.findById(productId);
+    if (productOptional.isPresent()) {
+      Product product = productOptional.get();
+      review.setProduct(product);
+      return reviewRepository.save(review);
     } else {
-      throw new IllegalArgumentException("Review not found");
+      throw new IllegalArgumentException("Product not found with id: " + productId);
     }
   }
 
-  public Review updateReview(Long productId, Long reviewId, Review updatedReview) {
-    Optional<Review> review = reviewRepository.findById(reviewId);
-    if (review.isPresent() && review.get().getProduct().getId().equals(productId)) {
-      Review reviewToUpdate = review.get();
-      reviewToUpdate.setRating(updatedReview.getRating());
-      reviewToUpdate.setReview(updatedReview.getReview());
-      return reviewRepository.save(reviewToUpdate);
-    } else {
-      throw new IllegalArgumentException("Review not found");
-    }
+  public void deleteReview(Long reviewId) {
+    reviewRepository.deleteById(reviewId);
   }
+
+//  public Review updateReview(Long productId, Long reviewId, Review updatedReview) {
+//    Optional<Review> review = reviewRepository.findById(reviewId);
+//    if (review.isPresent() && review.get().getProduct().getId().equals(productId)) {
+//      Review reviewToUpdate = review.get();
+//      reviewToUpdate.setRating(updatedReview.getRating());
+//      reviewToUpdate.setReview(updatedReview.getReview());
+//      return reviewRepository.save(reviewToUpdate);
+//    } else {
+//      throw new IllegalArgumentException("Review not found");
+//    }
+//  }
 }

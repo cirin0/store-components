@@ -24,5 +24,5 @@ public class Order {
   private double totalPrice;
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-  private List<OrderItem> items;
+  private List<OrderItem> orderItems;
 }

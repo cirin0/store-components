@@ -1,11 +1,10 @@
 package com.cirin0.storecomponents.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.http.ResponseEntity;
+import lombok.Data;
 
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -22,12 +21,12 @@ public class Product {
   @Column(nullable = false)
   private double price;
 
+  private LocalDateTime createdAt = LocalDateTime.now();
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id")
   private Category category;
 
-  // Пофіксити анотацію
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<Review> reviews;
-
+  private List<Review> reviews;
 }

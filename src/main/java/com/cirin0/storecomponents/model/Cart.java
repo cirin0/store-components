@@ -16,8 +16,8 @@ public class Cart {
   @MapsId
   private User user;
 
-  @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-  private List<CartItem> cartItems;
+  @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<CartItem> items;
 
   @Column(nullable = false)
   private double totalPrice;

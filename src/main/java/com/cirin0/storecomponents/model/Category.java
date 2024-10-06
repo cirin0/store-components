@@ -1,10 +1,9 @@
 package com.cirin0.storecomponents.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -13,8 +12,9 @@ public class Category {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(nullable = false, unique = true)
   private String name;
 
-  @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-  private Set<Product> products;
+  @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Product> products;
 }

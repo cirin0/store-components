@@ -1,7 +1,7 @@
 package com.cirin0.storecomponents.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
@@ -13,20 +13,20 @@ public class Review {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
+  @JoinColumn(name = "user_id") // nullable = false
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_id", nullable = false)
+  @JoinColumn(name = "product_id") // nullable = false
   private Product product;
 
   private String review;
 
   @Column(nullable = false)
-  private int rating;
+  private int rating = 0;
 
-  @Column(nullable = false)
   private LocalDateTime createdAt = LocalDateTime.now();
+
 }
 
 /*

@@ -3,13 +3,15 @@ package com.cirin0.storecomponents.controller;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -22,25 +24,23 @@ public class UserController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/admin/all")
-  public String showUsers() {
-    return userService.getUsers().toString();
+  ResponseEntity<List<User>> getAllUsers() {
+    return ResponseEntity.ok(userService.getAllUsers());
   }
 
-  // Пофіксити метод
-  @GetMapping("/{userId}")
-  public User showUser(@PathVariable Long userId) {
-    return userService.getUserById(userId);
+  @GetMapping("/{id}")
+  public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    return ResponseEntity.ok(userService.getUserById(id));
   }
 
-  @PutMapping("/{userId}")
-  public String updateUser(@PathVariable Long userId, @RequestBody User updatedUser) {
-    userService.updateUser(userId, updatedUser);
-    return "User updated";
+  @PutMapping("/{id}")
+  public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+    return ResponseEntity.ok(userService.updateUser(id, user));
   }
 
-  @DeleteMapping("/{userId}")
-  public String deleteUser(@PathVariable Long userId) {
-    userService.deleteUser(userId);
-    return "User deleted";
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    userService.deleteUser(id);
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

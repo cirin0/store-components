@@ -3,10 +3,11 @@ package com.cirin0.storecomponents.controller;
 import com.cirin0.storecomponents.model.Cart;
 import com.cirin0.storecomponents.service.CartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/carts")
+@RequestMapping("/api/carts")
 @RequiredArgsConstructor
 public class CartController {
 
@@ -18,36 +19,33 @@ public class CartController {
   }
 
   @GetMapping("/{cartId}")
-  public String showCart(@PathVariable Long cartId) {
-    return cartService.getCartByUserId(cartId).toString();
+  public Cart getCartById(@PathVariable Long cartId) {
+    return cartService.getCartById(cartId);
   }
 
-  @PostMapping("/{cartId}")
-  public String createCart(@PathVariable Cart cartId) {
-    if (cartService.getCartByUserId(cartId.getId()).isPresent()) {
-      return "Cart already exists";
-    } else if (cartId.getId() == null) {
-      return "Cart ID is required";
-    } else {
-      cartService.createCart(cartId);
-      return "Cart created";
-
-    }
+  @PostMapping("/create")
+  public ResponseEntity<Cart> createCart(@RequestParam("userId") Long userId) {
+    Cart cart = cartService.createCart(userId);
+    return ResponseEntity.ok(cart);
   }
 
   @DeleteMapping("/{cartId}")
-  public String deleteCart(@PathVariable Long cartId) {
+  public ResponseEntity<Void> deleteCart(@PathVariable Long cartId) {
     cartService.deleteCart(cartId);
-    return "Cart deleted";
+    return ResponseEntity.noContent().build();
   }
 
-  @PostMapping("/{cartId}/products/{productId}")
-  public String addToCart(@PathVariable Long cartId, @PathVariable Long productId, @RequestParam int quantity) {
-    cartService.addProductToCart(cartId, productId, quantity);
-    return "Product added to cart";
+  @PostMapping("/{cartId}/items")
+  public ResponseEntity<Cart> addItemsToCart(
+      @PathVariable Long cartId,
+      @RequestParam Long productId,
+      @RequestParam Integer quantity
+  ) {
+    Cart updatedCart = cartService.addProductToCart(cartId, productId, quantity);
+    return ResponseEntity.ok(updatedCart);
   }
 
-  @DeleteMapping("/{cartItemId}")
+  /*@DeleteMapping("/{cartItemId}")
   public String removeFromCart(@PathVariable Long cartItemId) {
     cartService.removeCartItem(cartItemId);
     return "Product removed from cart";
@@ -59,8 +57,10 @@ public class CartController {
     return "Cart cleared";
   }
 
+   */
+
   @GetMapping("/{cartId}/total")
-  public double getCartTotal(@PathVariable Long cartId) {
-    return cartService.calculateTotalPrice(cartId);
+  public ResponseEntity<Double> getTotal(@PathVariable Long cartId) {
+    return ResponseEntity.ok(cartService.calculateTotalPrice(cartId));
   }
 }

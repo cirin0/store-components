@@ -3,14 +3,13 @@ package com.cirin0.storecomponents.controller;
 import com.cirin0.storecomponents.model.Product;
 import com.cirin0.storecomponents.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/products") // add api/ prefix
+@RequestMapping("/api/products") // add api/ prefix
 @RequiredArgsConstructor
 public class ProductController {
 
@@ -21,12 +20,9 @@ public class ProductController {
     return productService.getAllProducts();
   }
 
-  // Пофіксити метод getProductById
   @GetMapping("/{id}")
-  public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-    return productService.getProductById(id)
-        .map(ResponseEntity::ok)
-        .orElseGet(() -> ResponseEntity.notFound().build());
+  public Optional<Product> getProductById(@PathVariable Long id) {
+    return productService.getProductById(id);
   }
 
   @PostMapping("/create")

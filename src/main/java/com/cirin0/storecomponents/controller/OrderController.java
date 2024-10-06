@@ -4,6 +4,7 @@ import com.cirin0.storecomponents.model.Order;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,19 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 @RequiredArgsConstructor
 public class OrderController {
   private final OrderService orderService;
 
   @GetMapping
-  public List<Order> getAllOrders() {
-    return orderService.getAllOrders();
+  public ResponseEntity<List<Order>> getOrders() {
+    return ResponseEntity.ok(orderService.getAllOrders());
   }
 
   @GetMapping("/{id}")
-  public Order getOrderById(Long id) {
-    return orderService.getOrderById(id);
+  public ResponseEntity<Order> getOrderById(Long id) {
+    return ResponseEntity.ok(orderService.getOrderById(id));
   }
 
   @PostMapping("/create")

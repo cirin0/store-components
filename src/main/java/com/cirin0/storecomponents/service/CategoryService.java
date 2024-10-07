@@ -26,16 +26,19 @@ public class CategoryService {
     return categoryRepository.save(category);
   }
 
-  public Category updateCategory(Long id, Category updatedCategory) {
-    return categoryRepository.findById(id)
+  public void updateCategory(Long id, Category updatedCategory) {
+    categoryRepository.findById(id)
         .map(category -> {
           category.setName(updatedCategory.getName());
+          category.setUrlImage(updatedCategory.getUrlImage());
           return categoryRepository.save(category);
         })
         .orElseThrow(() -> new RuntimeException("Category not found with id " + id));
   }
 
   public void deleteCategory(Long id) {
-    categoryRepository.deleteById(id);
+    Category category = categoryRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Category not found with id " + id));
+    categoryRepository.delete(category);
   }
 }

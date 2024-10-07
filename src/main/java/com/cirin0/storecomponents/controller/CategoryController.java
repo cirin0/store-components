@@ -3,6 +3,7 @@ package com.cirin0.storecomponents.controller;
 import com.cirin0.storecomponents.model.Category;
 import com.cirin0.storecomponents.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,27 +17,32 @@ public class CategoryController {
   private final CategoryService categoryService;
 
   @GetMapping
-  public ResponseEntity<List<Category>> getCategories() {
-    return ResponseEntity.ok(categoryService.getAllCategories());
+  public ResponseEntity<List<Category>> getAllCategories() {
+    List<Category> categories = categoryService.getAllCategories();
+    return ResponseEntity.ok(categories);
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
-    return ResponseEntity.ok(categoryService.getCategoryById(id));
+    Category category = categoryService.getCategoryById(id);
+    return category != null ? ResponseEntity.ok(category) : ResponseEntity.notFound().build();
   }
+
 
   @PostMapping("/create")
- public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+  public ResponseEntity<Category> createCategory(@RequestBody Category category) {
     Category createdCategory = categoryService.createCategory(category);
-    return ResponseEntity.ok(createdCategory);
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
   }
 
-  @PostMapping("/{id}")
-  public ResponseEntity<Category> updateCategory(Long id, Category updatedCategory) {
-    return ResponseEntity.ok(categoryService.updateCategory(id, updatedCategory));
+
+  @PutMapping("/update/{id}")
+  public ResponseEntity<Category> updateCategory(@PathVariable Long id, Category updatedCategory) {
+    categoryService.updateCategory(id, updatedCategory);
+    return ResponseEntity.ok(updatedCategory);
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/delete/{id}")
   public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
     categoryService.deleteCategory(id);
     return ResponseEntity.noContent().build();

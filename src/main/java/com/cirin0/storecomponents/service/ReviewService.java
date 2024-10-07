@@ -1,4 +1,4 @@
-package com.cirin0.storecomponents.service;
+/*package com.cirin0.storecomponents.service;
 
 import com.cirin0.storecomponents.model.Product;
 import com.cirin0.storecomponents.model.Review;
@@ -52,3 +52,5 @@ public class ReviewService {
 //    }
 //  }
 }
+
+ */

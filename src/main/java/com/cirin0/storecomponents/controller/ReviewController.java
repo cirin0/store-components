@@ -1,4 +1,4 @@
-package com.cirin0.storecomponents.controller;
+/*package com.cirin0.storecomponents.controller;
 
 import com.cirin0.storecomponents.model.Review;
 import com.cirin0.storecomponents.service.ReviewService;
@@ -48,3 +48,4 @@ public class ReviewController {
     return ResponseEntity.noContent().build();
   }
 }
+ */

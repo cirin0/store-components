@@ -1,4 +1,4 @@
-package com.cirin0.storecomponents.model;
+/*package com.cirin0.storecomponents.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

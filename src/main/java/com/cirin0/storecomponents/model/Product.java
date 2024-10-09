@@ -16,10 +16,15 @@ public class Product {
   @Column(nullable = false)
   private String name;
 
+  private String imageUrl;
+
   private String description;
 
   @Column(nullable = false)
   private double price;
+
+  @Column(nullable = false)
+  private int quantity;
 
   private LocalDateTime createdAt = LocalDateTime.now();
 

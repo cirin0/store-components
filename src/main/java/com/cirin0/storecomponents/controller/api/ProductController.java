@@ -1,4 +1,4 @@
-package com.cirin0.storecomponents.controller;
+package com.cirin0.storecomponents.controller.api;
 
 import com.cirin0.storecomponents.model.Product;
 import com.cirin0.storecomponents.service.ProductService;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/products") // add api/ prefix
+@RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductController {
 
@@ -22,10 +22,11 @@ public class ProductController {
 
   @GetMapping("/{id}")
   public Optional<Product> getProductById(@PathVariable Long id) {
-    return productService.getProductById(id);
+    return Optional.ofNullable(productService.getProductById(id)
+        .orElseThrow(() -> new RuntimeException("Product not found with id " + id)));
   }
 
-  @PostMapping("/create")
+  @PostMapping
   public Product createProduct(@RequestBody Product product) {
     return productService.createProduct(product);
   }

@@ -1,4 +1,4 @@
-package com.cirin0.storecomponents.controller;
+package com.cirin0.storecomponents.controller.api;
 
 import com.cirin0.storecomponents.model.Category;
 import com.cirin0.storecomponents.service.CategoryService;
@@ -28,21 +28,19 @@ public class CategoryController {
     return category != null ? ResponseEntity.ok(category) : ResponseEntity.notFound().build();
   }
 
-
-  @PostMapping("/create")
+  @PostMapping
   public ResponseEntity<Category> createCategory(@RequestBody Category category) {
     Category createdCategory = categoryService.createCategory(category);
     return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
   }
 
-
-  @PutMapping("/update/{id}")
+  @PutMapping("/{id}")
   public ResponseEntity<Category> updateCategory(@PathVariable Long id, Category updatedCategory) {
     categoryService.updateCategory(id, updatedCategory);
-    return ResponseEntity.ok(updatedCategory);
+    return ResponseEntity.status(HttpStatus.ACCEPTED).build();
   }
 
-  @DeleteMapping("/delete/{id}")
+  @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
     categoryService.deleteCategory(id);
     return ResponseEntity.noContent().build();

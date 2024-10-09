@@ -1,4 +1,4 @@
-package com.cirin0.storecomponents.controller;
+package com.cirin0.storecomponents.controller.api;
 
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.service.UserService;
@@ -16,8 +16,8 @@ public class AuthController {
   private final UserService userService;
 
   @PostMapping("/register")
-  public String registerUser(@RequestBody User user) {
+  public User registerUser(@RequestBody User user) {
     userService.createUser(user);
-    return "User registered";
+    return user;
   }
 }

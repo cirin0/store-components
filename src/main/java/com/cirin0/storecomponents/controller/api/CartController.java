@@ -1,4 +1,4 @@
-package com.cirin0.storecomponents.controller;
+package com.cirin0.storecomponents.controller.api;
 
 import com.cirin0.storecomponents.model.Cart;
 import com.cirin0.storecomponents.service.CartService;

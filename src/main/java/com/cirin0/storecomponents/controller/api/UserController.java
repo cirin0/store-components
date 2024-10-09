@@ -1,4 +1,4 @@
-package com.cirin0.storecomponents.controller;
+package com.cirin0.storecomponents.controller.api;
 
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.service.UserService;
@@ -30,7 +30,7 @@ public class UserController {
 
   @GetMapping("/{id}")
   public ResponseEntity<User> getUserById(@PathVariable Long id) {
-    return ResponseEntity.ok(userService.getUserById(id));
+    return ResponseEntity.ok(userService.getUserById(id).orElseThrow());
   }
 
   @PutMapping("/{id}")

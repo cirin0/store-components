@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+				content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+<body>
+<h1 th:text="${product.name}"></h1>
+<p th:text="${product.description}"></p>
+<p>Price: <span th:text="${product.price}"></span></p>
+<p>Quantity: <span th:text="${product.quantity}"></span></p>
+<!--<p>Category: <span th:text="${product.category.name}"></span></p>-->
+<input type="number" th:if="${product.quantity > 0}" th:value="1" th:min="1" th:max="${product.quantity}"
+			 th:id="quantity"/>
+<button th:if="${product.quantity > 0}"
+				th:onclick="'addToCart(' + ${product.id} + ', ' + document.getElementById(\'quantity\').value + ')'">Add to cart
+</button>
+
+</body>
+</html>

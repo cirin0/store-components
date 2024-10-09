@@ -3,18 +3,29 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Online Store</title>
-	<link rel="stylesheet" th:href="@{/css/style.css}" />
+	<link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
 <header>
 	<h1>Інтернет магазин комп'ютерних комплектуючих</h1>
+	<nav>
+		<ul>
+			<li><a th:href="@{/}">Головна</a></li>
+			<li><a th:href="@{/products}">Товари</a></li>
+			<li><a th:href="@{/categories}">Категорії</a></li>
+			<li><a th:href="@{/cart}">Кошик</a></li>
+			<li><a th:href="@{/orders}">Замовлення</a></li>
+			<li><a th:href="@{/registration}">Реєстрація</a></li>
+			<li><a th:href="@{/login}">Увійти</a></li>
+		</ul>
+	</nav>
 </header>
 
 <main>
 	<div th:fragment="slider">
 	</div>
 
-	<section>
+	<!--<section>
 		<h2>Категорії товарів</h2>
 		<ul>
 			<li th:each="category : ${categories}">
@@ -30,6 +41,7 @@
 		<div th:fragment="products">
 		</div>
 	</section>
+	-->
 </main>
 
 <footer>

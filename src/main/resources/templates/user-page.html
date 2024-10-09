@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+				content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>User</title>
+</head>
+<body>
+<h1>User Page</h1>
+<div>
+	<h2>
+		<p>Ім'я: <span th:text="${user.firstName}"></span></p>
+		<p>Прізвище: <span th:text="${user.lastName}"></span></p>
+	</h2>
+	<p>Email: <b><span th:text="${user.email}"></span></b></p>
+	<div th:if="${user.orders != null}">
+		<h2>Orders:</h2>
+		<div th:each="order : ${user.orders}">
+			<p>Order ID: <span th:text="${order.id}"></span></p>
+		</div>
+	</div>
+</div>
+</body>
+</html>

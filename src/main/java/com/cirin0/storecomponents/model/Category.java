@@ -3,6 +3,8 @@ package com.cirin0.storecomponents.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 
 @Data
 @Entity
@@ -16,6 +18,12 @@ public class Category {
 
   private String urlImage; // URL @Column(nullable = false)
 
-  //@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-  //private List<Product> products;
+  /*
+  @ElementCollection
+  @CollectionTable(name = "categoty-product", joinColumns = @JoinColumn(name = "category_id"))
+  @Column(name = "product_id")
+
+   */
+  @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+  private List<Product> products;
 }

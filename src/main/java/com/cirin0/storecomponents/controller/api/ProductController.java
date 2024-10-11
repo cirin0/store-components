@@ -1,8 +1,10 @@
 package com.cirin0.storecomponents.controller.api;
 
+import com.cirin0.storecomponents.dto.ProductDTO;
 import com.cirin0.storecomponents.model.Product;
 import com.cirin0.storecomponents.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +29,9 @@ public class ProductController {
   }
 
   @PostMapping
-  public Product createProduct(@RequestBody Product product) {
-    return productService.createProduct(product);
+  public ResponseEntity<Product> createProduct(@RequestBody ProductDTO productDTO) {
+    Product createdProduct = productService.createProduct(productDTO);
+    return ResponseEntity.ok(createdProduct);
   }
 
   @PutMapping("/{id}")

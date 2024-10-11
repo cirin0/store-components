@@ -18,12 +18,15 @@ public class CategoryWebController {
 
   @GetMapping
   public String getAllCategories(Model model) {
+    model.addAttribute("pageTitle", "Категорії");
     model.addAttribute("categories", categoryService.getAllCategories());
     return "category-list";
   }
 
   @GetMapping("/{id}")
   public String getCategoryById(@PathVariable Long id, Model model) {
+    String categoryName = categoryService.getCategoryById(id).getName();
+    model.addAttribute("pageTitle", categoryName);
     model.addAttribute("category", categoryService.getCategoryById(id));
     return "category-detail";
   }

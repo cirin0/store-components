@@ -18,12 +18,14 @@ public class ProductWebController {
   @GetMapping
   public String getAllProducts(Model model) {
     model.addAttribute("products", productService.getAllProducts());
+    model.addAttribute("pageTitle", "Список товарів");
     return "product-list";
   }
 
   @GetMapping("/{id}")
   public String getProductDetails(@PathVariable Long id, Model model) {
     model.addAttribute("product", productService.getProductById(id).orElseThrow());
+    model.addAttribute("pageTitle", productService.getProductById(id).orElseThrow().getName());
     return "product-details";
   }
 }

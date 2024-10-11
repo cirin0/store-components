@@ -1,5 +1,6 @@
 package com.cirin0.storecomponents.controller.api;
 
+import com.cirin0.storecomponents.dto.UserDTO;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -30,12 +32,18 @@ public class UserController {
 
   @GetMapping("/{id}")
   public ResponseEntity<User> getUserById(@PathVariable Long id) {
-    return ResponseEntity.ok(userService.getUserById(id).orElseThrow());
+    Optional<User> user = userService.getUserById(id);
+    return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
   }
 
+  /*
+  //TODO: змінити Dto на UserUpdateDTO
+   */
+
   @PutMapping("/{id}")
-  public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-    return ResponseEntity.ok(userService.updateUser(id, user));
+  public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+    User updatedUser = userService.updateUser(id, userDTO);
+    return ResponseEntity.ok(updatedUser);
   }
 
   @DeleteMapping("/{id}")

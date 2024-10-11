@@ -26,7 +26,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(request -> request
             .requestMatchers("/", "/products/**", "/products", "card/**", "/card",
                 "/login", "/products/card/add", "products/card/del", "/products/{id}",
-                "products/category/{categoryId}", "/category", "/card/del", "/card/add","/h2-console/**",
+                "products/category/{categoryId}", "/category", "/card/del", "/card/add", "/h2-console/**",
                 "/auth/**", "/register", "/register-form", "/login-form"
             ).permitAll()
             .requestMatchers("/admin/**").hasRole("ADMIN")

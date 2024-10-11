@@ -1,51 +1,14 @@
 <!DOCTYPE html>
 <html lang="ua" xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta charset="UTF-8">
-	<title>Online Store</title>
-	<link rel="stylesheet" th:href="@{/css/style.css}"/>
-</head>
+<head th:replace="~{fragments/head :: head}"></head>
 <body>
-<header>
-	<h1>Інтернет магазин комп'ютерних комплектуючих</h1>
-	<nav>
-		<ul>
-			<li><a th:href="@{/}">Головна</a></li>
-			<li><a th:href="@{/products}">Товари</a></li>
-			<li><a th:href="@{/categories}">Категорії</a></li>
-			<li><a th:href="@{/cart}">Кошик</a></li>
-			<li><a th:href="@{/orders}">Замовлення</a></li>
-			<li><a th:href="@{/registration}">Реєстрація</a></li>
-			<li><a th:href="@{/login}">Увійти</a></li>
-		</ul>
-	</nav>
-</header>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <main>
-	<div th:fragment="slider">
-	</div>
-
-	<!--<section>
-		<h2>Категорії товарів</h2>
-		<ul>
-			<li th:each="category : ${categories}">
-				<a th:href="@{/products/{categoryId}(categoryId=${category.id})}">
-					<span th:text="${category.name}"></span>
-				</a>
-			</li>
-		</ul>
-	</section>
-
-	<section>
-		<h2>Популярні товари</h2>
-		<div th:fragment="products">
-		</div>
-	</section>
-	-->
+	<p>Головна сторінка</p>
 </main>
 
-<footer>
-</footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/script.js}"></script>
 </body>

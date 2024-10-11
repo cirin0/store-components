@@ -1,13 +1,8 @@
 <!doctype html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport"
-				content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Categories</title>
-</head>
+<head th:replace="~{fragments/head :: head}"></head>
 <body>
+<div th:replace="~{fragments/header :: header}"></div>
 <h1>Categories</h1>
 <ul>
 	<li th:each="category : ${categories}">

@@ -1,13 +1,15 @@
-<!doctype html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport"
-				content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Document</title>
-</head>
+<!DOCTYPE html>
+<html lang="ua" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}"></head>
 <body>
-<h1>Category Details</h1>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main>
+	<h1>Category Details</h1>
+	<div th:if="${category}">
+		<h2 th:text="${category.name}"></h2>
+		<p>Image: <span th:text="${category.urlImage}"></span></p>
+	</div>
+</main>
 </body>
 </html>

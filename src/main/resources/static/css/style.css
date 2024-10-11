@@ -1,0 +1,76 @@
+* {
+    font-family: 'Roboto', sans-serif;
+    box-sizing: border-box;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0 15px;
+    text-align: center;
+    align-items: center;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    min-height: 70px;
+}
+
+main {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+footer {
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    min-height: 70px;
+
+}
+
+.header {
+    /*display: flex;
+    flex-direction: row;
+
+     */
+}
+
+.header__menu {
+    list-style-type: none; /* Прибираємо маркери списку */
+    padding: 0; /* Прибираємо відступи */
+    margin: 0; /* Прибираємо зовнішні відступи */
+    display: flex; /* Використовуємо flexbox для розташування елементів у рядок */
+    justify-content: center; /* Центруємо меню горизонтально */
+}
+
+.header__link {
+    text-decoration: none; /* Прибираємо підкреслення */
+    color: #000; /* Чорний колір тексту */
+    padding: 10px; /* Відступи від тексту до границь елемента */
+}
+
+.header__link a {
+    text-decoration: none; /* Прибираємо підкреслення з посилань */
+    color: #333; /* Колір тексту посилань */
+    font-size: 18px; /* Збільшуємо розмір шрифту для гарного вигляду */
+    padding: 10px 15px; /* Додаємо відступи всередині посилання */
+    border-radius: 5px; /* Робимо кути посилань округлими */
+    transition: background-color 0.3s; /* Додаємо плавний перехід для фону при наведенні */
+}
+
+.header__link a:hover {
+    background-color: #f0f0f0; /* Змінюємо колір фону при наведенні */
+    color: #007BFF; /* Змінюємо фон при наведенні */
+}

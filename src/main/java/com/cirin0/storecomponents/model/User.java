@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Email;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -28,6 +27,8 @@ public class User {
   private String lastName;
 
   private LocalDateTime createdAt = LocalDateTime.now();
+
+  private ERole role = ERole.USER;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Order> orders;

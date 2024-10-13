@@ -1,17 +1,33 @@
 <!DOCTYPE html>
-<html lang="uk" xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta charset="UTF-8">
-	<title>Registration</title>
-</head>
+<html lang="ua" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}"></head>
 <body>
-<h2>Registration</h2>
-<form action="#" th:action="@{/register}" method="post" th:object="${user}">
-	<label>Username:</label>
-	<input type="text" th:field="*{username}" />
-	<label>Password:</label>
-	<input type="password" th:field="*{password}" />
-	<button type="submit">Register</button>
-</form>
+<div th:replace="~{fragments/header :: header}"></div>
+<main class="container">
+	<h2>Registration</h2>
+	<div th:if="${param.error}" class="alert alert-danger">Invalid username and password.</div>
+	<div th:if="${param.logout}" class="alert alert-success">You have been logged out.</div>
+	<!--/*@thymesVar id="userDto" type="dto"*/-->
+	<form th:action="@{/auth/registration}" method="post" th:object="${userDto}">
+		<div class="form-group">
+			<label for="firstName">First Name:</label>
+			<input type="text" class="form-control" id="firstName" name="firstName" required/>
+		</div>
+		<div class="form-group">
+			<label for="lastName">Last Name:</label>
+			<input type="text" class="form-control" id="lastName" name="lastName" required/>
+		</div>
+		<div class="form-group">
+			<label for="email">Email:</label>
+			<input type="email" class="form-control" id="email" name="email" required/>
+		</div>
+		<div class="form-group">
+			<label for="password">Password:</label>
+			<input type="password" class="form-control" id="password" name="password" required/>
+		</div>
+		<button type="submit" class="btn btn-success">Register</button>
+	</form>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

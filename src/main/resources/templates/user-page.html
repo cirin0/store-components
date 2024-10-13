@@ -8,19 +8,23 @@
 	<title>User</title>
 </head>
 <body>
-<h1>User Page</h1>
-<div>
-	<h2>
-		<p>Ім'я: <span th:text="${user.firstName}"></span></p>
-		<p>Прізвище: <span th:text="${user.lastName}"></span></p>
-	</h2>
-	<p>Email: <b><span th:text="${user.email}"></span></b></p>
-	<div th:if="${user.orders != null}">
-		<h2>Orders:</h2>
-		<div th:each="order : ${user.orders}">
-			<p>Order ID: <span th:text="${order.id}"></span></p>
+<main>
+	<h1>User Page</h1>
+	<div>
+		<p th:text="'hello' + ${#authentication.getPrincipal().getName()}"></p>
+		<h2>
+			<p>Ім'я: <span th:text="${user.firstName}"></span></p>
+			<p>Прізвище: <span th:text="${user.lastName}"></span></p>
+		</h2>
+		<p>Email: <b><span th:text="${user.email}"></span></b></p>
+		<div th:if="${user.orders != null}">
+			<h2>Orders:</h2>
+			<div th:each="order : ${user.orders}">
+				<p>Order ID: <span th:text="${order.id}"></span></p>
+			</div>
 		</div>
 	</div>
-</div>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

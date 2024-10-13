@@ -18,15 +18,9 @@ public class UserService {
 
   private final UserRepository userRepository;
 
-  //@Autowired
-  //private PasswordEncoder passwordEncoder;
-
-
-  private String encryptPassword(String password) {
-    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-    return bCryptPasswordEncoder.encode(password);
+  private BCryptPasswordEncoder encoder() {
+    return new BCryptPasswordEncoder();
   }
-
 
   public List<User> getAllUsers() {
     return userRepository.findAll();
@@ -42,7 +36,7 @@ public class UserService {
     user.setFirstName(userDTO.getFirstName());
     user.setLastName(userDTO.getLastName());
     user.setEmail(userDTO.getEmail());
-    user.setPassword(encryptPassword(userDTO.getPassword()));
+    user.setPassword(encoder().encode(userDTO.getPassword()));
     User savedUser = userRepository.save(user);
 
     UserResponseDTO responseDTO = new UserResponseDTO();
@@ -54,7 +48,7 @@ public class UserService {
 
   public Optional<UserResponseDTO> login(UserRequestDTO userRequestDTO) {
     Optional<User> user = userRepository.findByEmail(userRequestDTO.getEmail());
-    if (user.isPresent() && new BCryptPasswordEncoder().matches(userRequestDTO.getPassword(), user.get().getPassword())) {
+    if (user.isPresent() && encoder().matches(userRequestDTO.getPassword(), user.get().getPassword())) {
       User foundUser = user.get();
       UserResponseDTO responseDTO = new UserResponseDTO();
       responseDTO.setFirstName(foundUser.getFirstName());
@@ -72,7 +66,7 @@ public class UserService {
     user.setLastName(userDTO.getLastName());
     user.setEmail(userDTO.getEmail());
     if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-      user.setPassword(encryptPassword(userDTO.getPassword()));
+      user.setPassword(encoder().encode(userDTO.getPassword()));
     }
     return userRepository.save(user);
   }

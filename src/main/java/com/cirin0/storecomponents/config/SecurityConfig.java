@@ -47,13 +47,15 @@ public class SecurityConfig {
             .requestMatchers("/", "/api/auth/**", "/api/categories", "/api/products").permitAll()
             .requestMatchers("/admin/**", "/api/users/admin/**", "/api/categories/").hasRole("ADMIN")
             .anyRequest().permitAll())
-//        .formLogin(Customizer.withDefaults())
-
+        .formLogin(Customizer.withDefaults())
+        /*
         .formLogin(form -> form
             .loginPage("/auth/login")
             .permitAll())
+
+         */
         .httpBasic(AbstractHttpConfigurer::disable)
-        //.userDetailsService(userDetailsService)
+        .userDetailsService(userDetailsService)
         .logout(Customizer.withDefaults());
 
     return http.build();

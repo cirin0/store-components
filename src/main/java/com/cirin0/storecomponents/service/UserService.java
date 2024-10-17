@@ -37,12 +37,14 @@ public class UserService {
     user.setLastName(userDTO.getLastName());
     user.setEmail(userDTO.getEmail());
     user.setPassword(encoder().encode(userDTO.getPassword()));
+    user.setRole(userDTO.getRole());
     User savedUser = userRepository.save(user);
 
     UserResponseDTO responseDTO = new UserResponseDTO();
     responseDTO.setFirstName(savedUser.getFirstName());
     responseDTO.setLastName(savedUser.getLastName());
     responseDTO.setEmail(savedUser.getEmail());
+    responseDTO.setRole(String.valueOf(savedUser.getRole()));
     return responseDTO;
   }
 
@@ -54,6 +56,7 @@ public class UserService {
       responseDTO.setFirstName(foundUser.getFirstName());
       responseDTO.setLastName(foundUser.getLastName());
       responseDTO.setEmail(foundUser.getEmail());
+      responseDTO.setRole(String.valueOf(foundUser.getRole()));
       return Optional.of(responseDTO);
     }
     return Optional.empty();

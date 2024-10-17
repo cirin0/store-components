@@ -1,5 +1,7 @@
 package com.cirin0.storecomponents.controller.api;
 
+import com.cirin0.storecomponents.dto.CategoryRequestDTO;
+import com.cirin0.storecomponents.dto.CategoryDTO;
 import com.cirin0.storecomponents.model.Category;
 import com.cirin0.storecomponents.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -29,15 +32,18 @@ public class CategoryController {
   }
 
   @PostMapping
-  public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-    Category createdCategory = categoryService.createCategory(category);
-    return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
+  public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryRequestDTO categoryRequestDTO) {
+    CategoryDTO categoryDTO = categoryService.createCategory(categoryRequestDTO);
+    return ResponseEntity.status(HttpStatus.CREATED).body(categoryDTO);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Category> updateCategory(@PathVariable Long id, Category updatedCategory) {
-    categoryService.updateCategory(id, updatedCategory);
-    return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+  public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoryRequestDTO categoryRequestDTO) {
+    Optional<CategoryDTO> updatedCategory = categoryService.updateCategory(id, categoryRequestDTO);
+    if (updatedCategory.isPresent()) {
+      return ResponseEntity.ok(updatedCategory.get());
+    }
+    return ResponseEntity.notFound().build();
   }
 
   @DeleteMapping("/{id}")

@@ -3,6 +3,7 @@ package com.cirin0.storecomponents.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,7 +17,7 @@ public class Category {
   @Column(nullable = false) //, unique = true
   private String name;
 
-  private String urlImage; // URL @Column(nullable = false)
+  private String imageUrl; // URL @Column(nullable = false)
 
   /*
   @ElementCollection
@@ -25,5 +26,5 @@ public class Category {
 
    */
   @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-  private List<Product> products;
+  private List<Product> products = new ArrayList<>();
 }

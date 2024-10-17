@@ -37,7 +37,7 @@ public class UserController {
   }
 
   /*
-  //TODO: змінити Dto на UserUpdateDTO
+  //TODO: змінити Entity на DTO
    */
 
   @PutMapping("/{id}")

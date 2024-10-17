@@ -8,9 +8,12 @@
 	<ul>
 		<li th:each="category : ${categories}">
 			<a th:href="@{/categories/{id}(id=${category.id})}" th:text="${category.name}"></a>
-			- Image: <span th:text="${category.urlImage}"></span>
+			- Image: <span th:text="${category.imageUrl}"></span>
 		</li>
 	</ul>
+	<div>
+		<a th:href="@{/categories/new}">Create new category</a>
+	</div>
 </main>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

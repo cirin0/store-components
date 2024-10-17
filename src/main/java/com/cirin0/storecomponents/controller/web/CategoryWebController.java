@@ -1,13 +1,13 @@
 package com.cirin0.storecomponents.controller.web;
 
+import com.cirin0.storecomponents.dto.CategoryRequestDTO;
 import com.cirin0.storecomponents.service.CategoryService;
-import com.cirin0.storecomponents.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 @Controller
 @RequestMapping("/categories")
@@ -30,4 +30,19 @@ public class CategoryWebController {
     model.addAttribute("category", categoryService.getCategoryById(id));
     return "category-detail";
   }
+
+  @GetMapping("/new")
+  public String showAddCategoryPage(Model model) {
+    CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO();
+    model.addAttribute("pageTitle", "Нова категорія");
+    model.addAttribute("category", categoryRequestDTO);
+    return "create-category";
+  }
+
+  @PostMapping("/new")
+  public String createCategory(@ModelAttribute("category") @Valid CategoryRequestDTO categoryRequestDTO, WebRequest request) {
+    categoryService.createCategory(categoryRequestDTO);
+    return "redirect:/categories";
+  }
+
 }

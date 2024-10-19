@@ -1,8 +1,8 @@
 package com.cirin0.storecomponents.service;
 
+import com.cirin0.storecomponents.dto.ProductDTO;
 import com.cirin0.storecomponents.model.Cart;
 import com.cirin0.storecomponents.model.CartItem;
-import com.cirin0.storecomponents.model.Product;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.repository.CartItemRepository;
 import com.cirin0.storecomponents.repository.CartRepository;
@@ -48,11 +48,11 @@ public class CartService {
 
   public Cart addProductToCart(Long cartId, Long productId, int quantity) {
     Optional<Cart> cartOptional = cartRepository.findById(cartId);
-    Optional<Product> productOptional = productService.getProductById(productId);
+    Optional<ProductDTO> productOptional = Optional.ofNullable(productService.getProductById(productId));
 
     if (cartOptional.isPresent() && productOptional.isPresent()) {
       Cart cart = cartOptional.get();
-      Product product = productOptional.get();
+      ProductDTO product = productOptional.get();
       CartItem cartItem = cart
           .getItems()
           .stream()
@@ -61,7 +61,7 @@ public class CartService {
           .orElseGet(() -> {
             CartItem newItem = new CartItem();
             newItem.setCart(cart);
-            newItem.setProduct(product);
+            //newItem.setProduct(productService.getProductById(productId));
             newItem.setQuantity(0);
             newItem.setPrice(0);
             return newItem;
@@ -92,7 +92,7 @@ public class CartService {
       }
       updateCartTotalPrice(cart);
       return cart;
-    }else {
+    } else {
       throw new IllegalArgumentException("Cart or CartItem not found");
     }
   }

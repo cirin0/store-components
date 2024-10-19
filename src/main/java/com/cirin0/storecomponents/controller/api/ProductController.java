@@ -1,9 +1,10 @@
 package com.cirin0.storecomponents.controller.api;
 
 import com.cirin0.storecomponents.dto.ProductDTO;
-import com.cirin0.storecomponents.model.Product;
+import com.cirin0.storecomponents.mapper.ProductMapper;
 import com.cirin0.storecomponents.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,27 +17,40 @@ import java.util.Optional;
 public class ProductController {
 
   private final ProductService productService;
+  private final ProductMapper productMapper;
 
   @GetMapping
-  public List<Product> getProducts() {
-    return productService.getAllProducts();
+  public ResponseEntity<List<ProductDTO>> getAllProducts() {
+    return ResponseEntity.ok(productService.getAllProducts());
   }
 
   @GetMapping("/{id}")
-  public Optional<Product> getProductById(@PathVariable Long id) {
-    return Optional.ofNullable(productService.getProductById(id)
-        .orElseThrow(() -> new RuntimeException("Product not found with id " + id)));
+  public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
+    ProductDTO product = productService.getProductById(id);
+    return Optional.ofNullable(product)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 
+  //TODO: За можливості додати отримання продуктів по категорією
+  /*
+  @GetMapping("/category/{categoryId}")
+  public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable Long categoryId) {
+    return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
+  }
+
+   */
+
   @PostMapping
-  public ResponseEntity<Product> createProduct(@RequestBody ProductDTO productDTO) {
-    Product createdProduct = productService.createProduct(productDTO);
-    return ResponseEntity.ok(createdProduct);
+  public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
+    ProductDTO createdProductDTO = productService.createProduct(productDTO);
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdProductDTO);
   }
 
   @PutMapping("/{id}")
-  public Product updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
-    return productService.updateProduct(id, updatedProduct);
+  public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+    ProductDTO updatedProductDTO = productService.updateProduct(id, productDTO);
+    return ResponseEntity.ok(updatedProductDTO);
   }
 
   @DeleteMapping("/{id}")

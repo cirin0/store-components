@@ -1,13 +1,21 @@
 package com.cirin0.storecomponents.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
+import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,14 +31,12 @@ public class Product {
   @Column(nullable = false)
   private double price;
 
+  @CurrentTimestamp
   private LocalDateTime createdAt = LocalDateTime.now();
 
   @ManyToOne
-  @JoinColumn(name = "category_id") //, nullable = false
+  @JoinColumn(name = "category_id")
+  @JsonIgnore
+  @JsonBackReference
   private Category category;
-
-  /*
-  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Review> reviews;
-   */
 }

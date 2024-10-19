@@ -1,10 +1,12 @@
 package com.cirin0.storecomponents.service;
 
 import com.cirin0.storecomponents.dto.ProductDTO;
+import com.cirin0.storecomponents.mapper.ProductMapper;
 import com.cirin0.storecomponents.model.Category;
 import com.cirin0.storecomponents.model.Product;
 import com.cirin0.storecomponents.repository.CategoryRepository;
 import com.cirin0.storecomponents.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,42 +19,49 @@ public class ProductService {
 
   private final ProductRepository productRepository;
   private final CategoryRepository categoryRepository;
+  private final ProductMapper productMapper;
 
-  public List<Product> getAllProducts() {
-    return productRepository.findAll();
+  private ProductDTO getProduct(ProductDTO productDTO, Product product) {
+    if (productDTO.getCategoryId() != null) {
+      Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
+      if (categoryOptional.isEmpty()) {
+        throw new EntityNotFoundException("Category not found with id " + productDTO.getCategoryId());
+      }
+      product.setCategory(categoryOptional.get());
+    }
+    Product savedProduct = productRepository.save(product);
+    return productMapper.toDTO(savedProduct);
   }
 
-  public Optional<Product> getProductById(Long id) {
-    return Optional.ofNullable(productRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Product not found with id " + id)));
+  public List<ProductDTO> getAllProducts() {
+    List<Product> products = productRepository.findAll();
+    return productMapper.toDTOList(products);
   }
 
-  public Product createProduct(ProductDTO productDTO) {
-    Category category = categoryRepository.findById(productDTO.getCategoryId())
-        .orElseThrow(() -> new RuntimeException("Category not found with id " + productDTO.getCategoryId()));
-    Product product = new Product();
-    product.setName(productDTO.getName());
-    product.setDescription(productDTO.getDescription());
-    product.setPrice(productDTO.getPrice());
-    product.setImageUrl(productDTO.getImageUrl());
-    product.setCategory(category);
-    return productRepository.save(product);
-  }
-
-  public Product updateProduct(Long id, Product updatedProduct) {
+  public ProductDTO getProductById(Long id) {
     return productRepository.findById(id)
-        .map(product -> {
-          product.setName(updatedProduct.getName());
-          product.setDescription(updatedProduct.getDescription());
-          product.setPrice(updatedProduct.getPrice());
-          product.setImageUrl(updatedProduct.getImageUrl());
-          product.setCategory(updatedProduct.getCategory());
-          return productRepository.save(product);
-        })
-        .orElseThrow(() -> new RuntimeException("Product not found with id " + id));
+        .map(productMapper::toDTO)
+        .orElse(null);
+  }
+
+  public ProductDTO createProduct(ProductDTO productDTO) {
+    Product product = productMapper.toEntity(productDTO);
+    return getProduct(productDTO, product);
+  }
+
+  public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
+    Optional<Product> productOptional = productRepository.findById(id);
+    if (productOptional.isEmpty()) {
+      throw new IllegalArgumentException("Product not found with id " + id);
+    }
+    Product product = productOptional.get();
+    productMapper.updateProductFromDTO(productDTO, product);
+    return getProduct(productDTO, product);
   }
 
   public void deleteProduct(Long id) {
-    productRepository.deleteById(id);
+    Product product = productRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Product not found " + id));
+    productRepository.delete(product);
   }
 }

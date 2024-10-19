@@ -24,8 +24,8 @@ public class ProductWebController {
 
   @GetMapping("/{id}")
   public String getProductDetails(@PathVariable Long id, Model model) {
-    model.addAttribute("product", productService.getProductById(id).orElseThrow());
-    model.addAttribute("pageTitle", productService.getProductById(id).orElseThrow().getName());
+    model.addAttribute("product", productService.getProductById(id));
+    model.addAttribute("pageTitle", productService.getProductById(id).getName());
     return "product-details";
   }
 }

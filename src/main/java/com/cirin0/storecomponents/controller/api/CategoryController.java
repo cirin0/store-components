@@ -1,8 +1,8 @@
 package com.cirin0.storecomponents.controller.api;
 
-import com.cirin0.storecomponents.dto.CategoryRequestDTO;
 import com.cirin0.storecomponents.dto.CategoryDTO;
-import com.cirin0.storecomponents.model.Category;
+import com.cirin0.storecomponents.dto.CategoryRequestDTO;
+import com.cirin0.storecomponents.mapper.CategoryMapper;
 import com.cirin0.storecomponents.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,17 +18,19 @@ import java.util.Optional;
 public class CategoryController {
 
   private final CategoryService categoryService;
+  private final CategoryMapper categoryMapper;
 
   @GetMapping
-  public ResponseEntity<List<Category>> getAllCategories() {
-    List<Category> categories = categoryService.getAllCategories();
-    return ResponseEntity.ok(categories);
+  public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+    return ResponseEntity.ok(categoryService.getAllCategories());
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
-    Category category = categoryService.getCategoryById(id);
-    return category != null ? ResponseEntity.ok(category) : ResponseEntity.notFound().build();
+  public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
+    CategoryDTO category = categoryService.getCategoryById(id);
+    return Optional.ofNullable(category)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 
   @PostMapping
@@ -38,12 +40,9 @@ public class CategoryController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoryRequestDTO categoryRequestDTO) {
-    Optional<CategoryDTO> updatedCategory = categoryService.updateCategory(id, categoryRequestDTO);
-    if (updatedCategory.isPresent()) {
-      return ResponseEntity.ok(updatedCategory.get());
-    }
-    return ResponseEntity.notFound().build();
+  public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryRequestDTO categoryRequestDTO) {
+    CategoryDTO categoryDTO = categoryService.updateCategory(id, categoryRequestDTO);
+    return ResponseEntity.ok(categoryDTO);
   }
 
   @DeleteMapping("/{id}")

@@ -1,11 +1,11 @@
 package com.cirin0.storecomponents.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Data
 @Entity
@@ -19,12 +19,7 @@ public class Category {
 
   private String imageUrl; // URL @Column(nullable = false)
 
-  /*
-  @ElementCollection
-  @CollectionTable(name = "categoty-product", joinColumns = @JoinColumn(name = "category_id"))
-  @Column(name = "product_id")
-
-   */
-  @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonManagedReference
   private List<Product> products = new ArrayList<>();
 }

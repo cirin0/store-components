@@ -10,5 +10,5 @@ public class CategoryDTO {
   private Long id;
   private String name;
   private String imageUrl;
-  private List<Product> product;
+  private List<Product> products;
 }

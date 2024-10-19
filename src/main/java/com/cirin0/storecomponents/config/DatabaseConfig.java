@@ -1,3 +1,5 @@
+package com.cirin0.storecomponents.config;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;

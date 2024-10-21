@@ -1,1 +1,1 @@
-web: java -jar target/store-components-0.0.1-SNAPSHOT.jar
+web: java -jar target/store-components-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod

@@ -1,6 +1,6 @@
 package com.cirin0.storecomponents.controller.web;
 
-import com.cirin0.storecomponents.dto.CategoryRequestDTO;
+import com.cirin0.storecomponents.dto.CategoryRequest;
 import com.cirin0.storecomponents.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,15 +33,15 @@ public class CategoryWebController {
 
   @GetMapping("/new")
   public String showAddCategoryPage(Model model) {
-    CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO();
+    CategoryRequest categoryRequest = new CategoryRequest();
     model.addAttribute("pageTitle", "Нова категорія");
-    model.addAttribute("category", categoryRequestDTO);
+    model.addAttribute("category", categoryRequest);
     return "create-category";
   }
 
   @PostMapping("/new")
-  public String createCategory(@ModelAttribute("category") @Valid CategoryRequestDTO categoryRequestDTO, WebRequest request) {
-    categoryService.createCategory(categoryRequestDTO);
+  public String createCategory(@ModelAttribute("category") @Valid CategoryRequest categoryRequest, WebRequest request) {
+    categoryService.createCategory(categoryRequest);
     return "redirect:/categories";
   }
 

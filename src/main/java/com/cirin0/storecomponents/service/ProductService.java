@@ -21,7 +21,7 @@ public class ProductService {
   private final CategoryRepository categoryRepository;
   private final ProductMapper productMapper;
 
-  private ProductDTO getProduct(ProductDTO productDTO, Product product) {
+  private ProductDTO verifyAndUpsert(ProductDTO productDTO, Product product) { //
     if (productDTO.getCategoryId() != null) {
       Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
       if (categoryOptional.isEmpty()) {
@@ -46,7 +46,7 @@ public class ProductService {
 
   public ProductDTO createProduct(ProductDTO productDTO) {
     Product product = productMapper.toEntity(productDTO);
-    return getProduct(productDTO, product);
+    return verifyAndUpsert(productDTO, product);
   }
 
   public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
@@ -55,8 +55,11 @@ public class ProductService {
       throw new IllegalArgumentException("Product not found with id " + id);
     }
     Product product = productOptional.get();
+    if (productDTO.getPrice() != null) {
+      product.setPrice(productDTO.getPrice());
+    }
     productMapper.updateProductFromDTO(productDTO, product);
-    return getProduct(productDTO, product);
+    return verifyAndUpsert(productDTO, product);
   }
 
   public void deleteProduct(Long id) {

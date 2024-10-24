@@ -20,6 +20,6 @@ public class Category {
   private String imageUrl; // URL @Column(nullable = false)
 
   @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-  @JsonManagedReference
+  //@JsonManagedReference
   private List<Product> products = new ArrayList<>();
 }

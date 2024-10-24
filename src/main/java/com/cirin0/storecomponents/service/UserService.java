@@ -3,6 +3,9 @@ package com.cirin0.storecomponents.service;
 import com.cirin0.storecomponents.dto.UserDTO;
 import com.cirin0.storecomponents.dto.UserRequestDTO;
 import com.cirin0.storecomponents.dto.UserResponseDTO;
+import com.cirin0.storecomponents.mapper.UserMapper;
+import com.cirin0.storecomponents.mapper.UserMapperTest;
+import com.cirin0.storecomponents.model.ERole;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,65 +19,63 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
+  private final UserMapper userMapper;
   private final UserRepository userRepository;
+  private final UserMapperTest userMapperTest;
 
   private BCryptPasswordEncoder encoder() {
     return new BCryptPasswordEncoder();
   }
 
-  public List<User> getAllUsers() {
-    return userRepository.findAll();
+  public List<UserDTO> getAllUsers() {
+    List<User> users = userRepository.findAll();
+    return users.stream()
+        .map(userMapperTest::toDTO)
+        .toList();
   }
 
-  public Optional<User> getUserById(Long id) {
-    return Optional.ofNullable(userRepository.findById(id).orElseThrow(
-        () -> new RuntimeException("User not found with id " + id)));
+  public UserDTO getUserById(Long id) {
+    Optional<User> user = userRepository.findById(id);
+    if (user.isEmpty()) {
+      throw new RuntimeException("User not found with id " + id);
+    }
+    return userMapperTest.toDTO(user.get());
   }
 
-  public UserResponseDTO register(UserDTO userDTO) {
-    User user = new User();
-    user.setFirstName(userDTO.getFirstName());
-    user.setLastName(userDTO.getLastName());
-    user.setEmail(userDTO.getEmail());
-    user.setPassword(encoder().encode(userDTO.getPassword()));
-    user.setRole(userDTO.getRole());
+  public UserDTO createUser(UserRequestDTO userRequestDTO) {
+    User user = userMapperTest.toEntity(userRequestDTO);
+    user.setPassword(encoder().encode(userRequestDTO.getPassword()));
     User savedUser = userRepository.save(user);
-
-    UserResponseDTO responseDTO = new UserResponseDTO();
-    responseDTO.setFirstName(savedUser.getFirstName());
-    responseDTO.setLastName(savedUser.getLastName());
-    responseDTO.setEmail(savedUser.getEmail());
-    responseDTO.setRole(String.valueOf(savedUser.getRole()));
-    return responseDTO;
+    return userMapperTest.toDTO(savedUser);
   }
 
-  public Optional<UserResponseDTO> login(UserRequestDTO userRequestDTO) {
-    Optional<User> user = userRepository.findByEmail(userRequestDTO.getEmail());
-    if (user.isPresent() && encoder().matches(userRequestDTO.getPassword(), user.get().getPassword())) {
-      User foundUser = user.get();
-      UserResponseDTO responseDTO = new UserResponseDTO();
-      responseDTO.setFirstName(foundUser.getFirstName());
-      responseDTO.setLastName(foundUser.getLastName());
-      responseDTO.setEmail(foundUser.getEmail());
-      responseDTO.setRole(String.valueOf(foundUser.getRole()));
-      return Optional.of(responseDTO);
+  public UserResponseDTO signIn(UserRequestDTO userRequestDTO) {
+    User user = userRepository.findByEmail(userRequestDTO.getEmail())
+        .orElseThrow(() -> new RuntimeException("User not found with email " + userRequestDTO.getEmail()));
+    if (!encoder().matches(userRequestDTO.getPassword(), user.getPassword())) {
+      throw new RuntimeException("Invalid password");
     }
-    return Optional.empty();
+    return userMapper.userDTOToUserResponseDTO(userMapper.userToUserDTO(user));
   }
 
 
-  public User updateUser(Long id, UserDTO userDTO) {
-    User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found with id " + id));
-    user.setFirstName(userDTO.getFirstName());
-    user.setLastName(userDTO.getLastName());
-    user.setEmail(userDTO.getEmail());
-    if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-      user.setPassword(encoder().encode(userDTO.getPassword()));
+  public UserDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
+    Optional<User> userOptional = userRepository.findById(id);
+    if (userOptional.isEmpty()) {
+      throw new RuntimeException("User not found with id " + id);
     }
-    return userRepository.save(user);
+    User user = userOptional.get();
+    user.setEmail(userRequestDTO.getEmail());
+    user.setPassword(encoder().encode(userRequestDTO.getPassword()));
+    user.setRole(userRequestDTO.getRole() == null ? ERole.USER : userRequestDTO.getRole());
+    User updatedUser = userRepository.save(user);
+    return userMapperTest.toDTO(updatedUser);
   }
 
   public void deleteUser(Long id) {
+    if (!userRepository.existsById(id)) {
+      throw new RuntimeException("User not found with id " + id);
+    }
     userRepository.deleteById(id);
   }
 }

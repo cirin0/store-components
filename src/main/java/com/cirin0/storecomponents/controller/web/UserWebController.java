@@ -1,6 +1,5 @@
 package com.cirin0.storecomponents.controller.web;
 
-import com.cirin0.storecomponents.service.ProductService;
 import com.cirin0.storecomponents.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,7 @@ public class UserWebController {
 
   @GetMapping("/{id}")
   public String getUserById(@PathVariable Long id, Model model) {
-    model.addAttribute("user", userService.getUserById(id).orElseThrow());
+    model.addAttribute("user", userService.getUserById(id));
     return "user-page";
   }
 }

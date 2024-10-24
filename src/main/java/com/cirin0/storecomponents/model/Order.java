@@ -18,11 +18,12 @@ public class Order {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  @Column(nullable = false)
-  private LocalDateTime orderDate = LocalDateTime.now();
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<CartItem> items;
 
   private double totalPrice;
 
-  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-  private List<OrderItem> orderItems;
+  @Column(nullable = false)
+  private LocalDateTime orderDate = LocalDateTime.now();
+
 }

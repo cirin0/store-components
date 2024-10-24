@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -18,17 +17,14 @@ public class AuthController {
   private final UserService userService;
 
   @PostMapping("/register")
-  public ResponseEntity<UserResponseDTO> register(@RequestBody UserDTO userDTO) {
-    UserResponseDTO responseDTO = userService.register(userDTO);
-    return ResponseEntity.ok(responseDTO);
+  public ResponseEntity<UserDTO> register(@RequestBody UserRequestDTO userRequestDTO) {
+    UserDTO userDTO = userService.createUser(userRequestDTO);
+    return ResponseEntity.ok(userDTO);
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody UserRequestDTO userRequestDTO) {
-    Optional<UserResponseDTO> responseDTO = userService.login(userRequestDTO);
-    if (responseDTO.isPresent()) {
-      return ResponseEntity.ok(responseDTO.get());
-    }
-    return ResponseEntity.status(401).body("Invalid credentials");
+  public ResponseEntity<UserResponseDTO> login(@RequestBody UserRequestDTO userRequestDTO) {
+    UserResponseDTO userDTO = userService.signIn(userRequestDTO);
+    return ResponseEntity.ok(userDTO);
   }
 }

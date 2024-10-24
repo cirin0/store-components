@@ -4,12 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
+@Data
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class CartItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +22,8 @@ public class CartItem {
   private int quantity;
 
   private double price;
+
+  public void updatePrice() {
+    price = product.getPrice() * quantity;
+  }
 }

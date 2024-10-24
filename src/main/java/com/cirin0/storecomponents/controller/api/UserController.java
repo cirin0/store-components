@@ -1,12 +1,11 @@
 package com.cirin0.storecomponents.controller.api;
 
 import com.cirin0.storecomponents.dto.UserDTO;
-import com.cirin0.storecomponents.model.User;
+import com.cirin0.storecomponents.dto.UserRequestDTO;
 import com.cirin0.storecomponents.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,30 +18,26 @@ public class UserController {
 
   private final UserService userService;
 
-  @GetMapping
-  public String showNotLoggedInMessage() {
-    return "Please log in to access your user information";
-  }
+//  @GetMapping
+//  public String showNotLoggedInMessage() {
+//    return "Please log in to access your user information";
+//  }
 
-  @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/admin/all")
-  ResponseEntity<List<User>> getAllUsers() {
+  //@PreAuthorize("hasRole('ADMIN')")
+  @GetMapping
+  ResponseEntity<List<UserDTO>> getAllUsers() {
     return ResponseEntity.ok(userService.getAllUsers());
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<User> getUserById(@PathVariable Long id) {
-    Optional<User> user = userService.getUserById(id);
-    return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+  public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+    UserDTO userDTO = userService.getUserById(id);
+    return ResponseEntity.ok(userDTO);
   }
 
-  /*
-  //TODO: змінити Entity на DTO
-   */
-
   @PutMapping("/{id}")
-  public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-    User updatedUser = userService.updateUser(id, userDTO);
+  public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
+    UserDTO updatedUser = userService.updateUser(id, userRequestDTO);
     return ResponseEntity.ok(updatedUser);
   }
 

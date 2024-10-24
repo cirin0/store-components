@@ -1,6 +1,7 @@
 package com.cirin0.storecomponents.controller.web;
 
 import com.cirin0.storecomponents.dto.UserDTO;
+import com.cirin0.storecomponents.dto.UserRequestDTO;
 import com.cirin0.storecomponents.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -42,8 +43,8 @@ public class AuthWebController {
   }
 
   @PostMapping("/registration")
-  public String registerUser(@ModelAttribute("user") @Valid UserDTO userDto, WebRequest request) {
-    userService.register(userDto);
+  public String registerUser(@ModelAttribute("user") @Valid UserRequestDTO userRequestDTO, WebRequest request) {
+    userService.createUser(userRequestDTO);
     return "redirect:/auth/login";
   }
 }

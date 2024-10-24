@@ -1,10 +1,14 @@
 package com.cirin0.storecomponents.service;
 
+import com.cirin0.storecomponents.dto.CartDTO;
 import com.cirin0.storecomponents.dto.ProductDTO;
+import com.cirin0.storecomponents.dto.UserDTO;
+import com.cirin0.storecomponents.mapper.CartMapper;
+import com.cirin0.storecomponents.mapper.ProductMapper;
+import com.cirin0.storecomponents.mapper.UserMapper;
 import com.cirin0.storecomponents.model.Cart;
 import com.cirin0.storecomponents.model.CartItem;
 import com.cirin0.storecomponents.model.User;
-import com.cirin0.storecomponents.repository.CartItemRepository;
 import com.cirin0.storecomponents.repository.CartRepository;
 import com.cirin0.storecomponents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,113 +16,99 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+
 @Service
 @RequiredArgsConstructor
 public class CartService {
   private final CartRepository cartRepository;
-  private final CartItemRepository cartItemRepository;
   private final ProductService productService;
   private final UserRepository userRepository;
 
-  public Optional<Cart> getCartByUserId(Long userId) {
-    return cartRepository.findByUserId(userId);
+  public CartDTO getCartByUserId(Long id) {
+    Cart cart = cartRepository.findByUserId(id)
+        .orElseThrow(() -> new RuntimeException("Cart not found " + id));
+    return CartMapper.INSTANCE.toDto(cart);
   }
 
-  public Cart getCartById(Long cartId) {
-    return cartRepository.findById(cartId)
-        .orElseThrow(() -> new RuntimeException("Cart not found with id " + cartId));
+  public CartDTO getCartById(Long id) {
+    Cart cart = cartRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Cart not found " + id));
+    return CartMapper.INSTANCE.toDto(cart);
   }
 
-  public Cart createCart(Long userId) {
-    Optional<User> userOptional = userRepository.findById(userId);
-    if (userOptional.isPresent()) {
-      User user = userOptional.get();
+  public CartDTO createCart(Long userId) {
+    Optional<UserDTO> userDTO = userRepository.findById(userId)
+        .map(UserMapper.INSTANCE::userToUserDTO);
+    if (userDTO.isPresent()) {
+      User user = UserMapper.INSTANCE.userDTOToUser(userDTO.get());
       Cart cart = new Cart();
       cart.setUser(user);
-      cart.setTotalPrice(0);
-      return cartRepository.save(cart);
+      return CartMapper.INSTANCE.toDto(cartRepository.save(cart));
     } else {
-      throw new IllegalArgumentException("User not found");
+      throw new RuntimeException("User not found " + userId);
     }
   }
 
-  public void deleteCart(Long id) {
-    cartRepository.deleteById(id);
+  public CartDTO addItemsToCart(Long userId, Long productId, int quantity) {
+    Cart cart = cartRepository.findByUserId(userId)
+        .orElseGet(() -> createCartForUser(userId));
+    ProductDTO product = productService.getProductById(productId);
+    CartItem cartItem = cart.getItems().stream()
+        .filter(item -> item.getProduct().getId().equals(productId))
+        .findFirst()
+        .orElseGet(() -> {
+          CartItem newItem = new CartItem();
+          newItem.setCart(cart);
+          newItem.setProduct(ProductMapper.INSTANCE.toEntity(product));
+          return newItem;
+        });
+    cartItem.setQuantity(cartItem.getQuantity() + quantity);
+    updateCartTotalPrice(cart);
+    return CartMapper.INSTANCE.toDto(cart);
   }
 
-  public Cart addProductToCart(Long cartId, Long productId, int quantity) {
-    Optional<Cart> cartOptional = cartRepository.findById(cartId);
-    Optional<ProductDTO> productOptional = Optional.ofNullable(productService.getProductById(productId));
-
-    if (cartOptional.isPresent() && productOptional.isPresent()) {
-      Cart cart = cartOptional.get();
-      ProductDTO product = productOptional.get();
-      CartItem cartItem = cart
-          .getItems()
-          .stream()
-          .filter(item -> item.getProduct().getId().equals(productId))
-          .findFirst()
-          .orElseGet(() -> {
-            CartItem newItem = new CartItem();
-            newItem.setCart(cart);
-            //newItem.setProduct(productService.getProductById(productId));
-            newItem.setQuantity(0);
-            newItem.setPrice(0);
-            return newItem;
-          });
-      cartItem.setQuantity(cartItem.getQuantity() + quantity);
-      cartItem.setPrice(product.getPrice() * cartItem.getQuantity());
-      cartItemRepository.save(cartItem);
-      updateCartTotalPrice(cart);
-      return cart;
+  public CartDTO UpdateCartItemQuantity(Long userId, Long cartItemId, int quantity) {
+    Cart cart = cartRepository.findByUserId(userId)
+        .orElseThrow(() -> new RuntimeException("Cart not found " + userId));
+    CartItem cartItem = cart.getItems().stream()
+        .filter(item -> item.getId().equals(cartItemId))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("CartItem not found " + cartItemId));
+    if (quantity == 0) {
+      cart.getItems().remove(cartItem);
     } else {
-      throw new IllegalArgumentException("Cart or Product not found");
+      cartItem.setQuantity(quantity);
     }
+    updateCartTotalPrice(cart);
+    return CartMapper.INSTANCE.toDto(cart);
   }
 
-  public Cart UpdateCartItemQuantity(Long cartId, Long cartItemId, int newQuantity) {
-    Optional<Cart> cartOptional = cartRepository.findById(cartId);
-    Optional<CartItem> cartItemOptional = cartItemRepository.findById(cartItemId);
-
-    if (cartOptional.isPresent() && cartItemOptional.isPresent()) {
-      Cart cart = cartOptional.get();
-      CartItem cartItem = cartItemOptional.get();
-      if (newQuantity <= 0) {
-        cartItemRepository.deleteById(cartItemId);
-      } else {
-        cartItem.setQuantity(newQuantity);
-        cartItem.setPrice(cartItem.getProduct().getPrice() * newQuantity);
-        cartItemRepository.save(cartItem);
-      }
-      updateCartTotalPrice(cart);
-      return cart;
-    } else {
-      throw new IllegalArgumentException("Cart or CartItem not found");
-    }
+  public void deleteItemFromCart(Long userId, Long cartItemId) {
+    Cart cart = cartRepository.findByUserId(userId)
+        .orElseThrow(() -> new RuntimeException("Cart not found " + userId));
+    CartItem cartItem = cart.getItems().stream()
+        .filter(item -> item.getId().equals(cartItemId))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("CartItem not found " + cartItemId));
+    cart.getItems().remove(cartItem);
+    updateCartTotalPrice(cart);
+    cartRepository.save(cart);
   }
 
-  public void removeCartItem(Long cartItemId) {
-    cartItemRepository.deleteById(cartItemId);
-  }
-
-  public void clearCart(Long cartId) {
-    Optional<Cart> cartOptional = cartRepository.findById(cartId);
-    if (cartOptional.isPresent()) {
-      Cart cart = cartOptional.get();
-      cart.getItems().clear();
-      cart.setTotalPrice(0);
-      cartRepository.save(cart);
-    } else {
-      throw new IllegalArgumentException("Cart not found");
-    }
+  private Cart createCartForUser(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new RuntimeException("User not found " + userId));
+    user.setId(userId);
+    Cart cart = new Cart();
+    cart.setUser(user);
+    return cart;
   }
 
   private void updateCartTotalPrice(Cart cart) {
     double totalPrice = cart.getItems().stream()
-        .mapToDouble(CartItem::getPrice)
-        .reduce(0.0, Double::sum);
+        .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
+        .sum();
     cart.setTotalPrice(totalPrice);
-    cartRepository.save(cart);
   }
 
   public double calculateTotalPrice(Long cartId) {

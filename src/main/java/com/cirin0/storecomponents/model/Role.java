@@ -1,6 +1,6 @@
 package com.cirin0.storecomponents.model;
 
-public enum ERole {
+public enum Role {
   USER,
   ADMIN
 }

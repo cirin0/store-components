@@ -1,11 +1,9 @@
 package com.cirin0.storecomponents.service;
 
 import com.cirin0.storecomponents.dto.UserDTO;
-import com.cirin0.storecomponents.dto.UserRequestDTO;
-import com.cirin0.storecomponents.dto.UserResponseDTO;
+import com.cirin0.storecomponents.dto.UserRegister;
 import com.cirin0.storecomponents.mapper.UserMapper;
-import com.cirin0.storecomponents.mapper.UserMapperTest;
-import com.cirin0.storecomponents.model.ERole;
+import com.cirin0.storecomponents.model.Role;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +19,6 @@ public class UserService {
 
   private final UserMapper userMapper;
   private final UserRepository userRepository;
-  private final UserMapperTest userMapperTest;
 
   private BCryptPasswordEncoder encoder() {
     return new BCryptPasswordEncoder();
@@ -30,7 +27,7 @@ public class UserService {
   public List<UserDTO> getAllUsers() {
     List<User> users = userRepository.findAll();
     return users.stream()
-        .map(userMapperTest::toDTO)
+        .map(userMapper::toDTO)
         .toList();
   }
 
@@ -39,37 +36,37 @@ public class UserService {
     if (user.isEmpty()) {
       throw new RuntimeException("User not found with id " + id);
     }
-    return userMapperTest.toDTO(user.get());
+    return userMapper.toDTO(user.get());
   }
 
-  public UserDTO createUser(UserRequestDTO userRequestDTO) {
-    User user = userMapperTest.toEntity(userRequestDTO);
-    user.setPassword(encoder().encode(userRequestDTO.getPassword()));
+  public UserDTO createUser(UserRegister userRegister) {
+    User user = userMapper.toEntity(userRegister);
+    user.setPassword(encoder().encode(userRegister.getPassword()));
+    user.setRole(userRegister.getRole() == null ? Role.USER : userRegister.getRole());
     User savedUser = userRepository.save(user);
-    return userMapperTest.toDTO(savedUser);
+    return userMapper.toDTO(savedUser);
   }
 
-  public UserResponseDTO signIn(UserRequestDTO userRequestDTO) {
-    User user = userRepository.findByEmail(userRequestDTO.getEmail())
-        .orElseThrow(() -> new RuntimeException("User not found with email " + userRequestDTO.getEmail()));
-    if (!encoder().matches(userRequestDTO.getPassword(), user.getPassword())) {
+  public UserDTO loginUser(UserRegister userRegister) {
+    User user = userRepository.findByEmail(userRegister.getEmail())
+        .orElseThrow(() -> new RuntimeException("User not found with email " + userRegister.getEmail()));
+    if (!encoder().matches(userRegister.getPassword(), user.getPassword())) {
       throw new RuntimeException("Invalid password");
     }
-    return userMapper.userDTOToUserResponseDTO(userMapper.userToUserDTO(user));
+    return userMapper.toDTO(user);
   }
 
-
-  public UserDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
+  public UserDTO updateUser(Long id, UserRegister userRegister) {
     Optional<User> userOptional = userRepository.findById(id);
     if (userOptional.isEmpty()) {
       throw new RuntimeException("User not found with id " + id);
     }
     User user = userOptional.get();
-    user.setEmail(userRequestDTO.getEmail());
-    user.setPassword(encoder().encode(userRequestDTO.getPassword()));
-    user.setRole(userRequestDTO.getRole() == null ? ERole.USER : userRequestDTO.getRole());
+    user.setEmail(userRegister.getEmail());
+    user.setPassword(encoder().encode(userRegister.getPassword()));
+    user.setRole(userRegister.getRole() == null ? Role.USER : userRegister.getRole());
     User updatedUser = userRepository.save(user);
-    return userMapperTest.toDTO(updatedUser);
+    return userMapper.toDTO(updatedUser);
   }
 
   public void deleteUser(Long id) {

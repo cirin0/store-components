@@ -1,5 +1,6 @@
 package com.cirin0.storecomponents.config;
 
+import com.cirin0.storecomponents.model.Role;
 import com.cirin0.storecomponents.model.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,34 +13,30 @@ import java.util.List;
 @Data
 public class UserDetailsImpl implements UserDetails {
 
-  private String firstName;
-  private String lastName;
+  private String username;
   private String email;
   private String password;
-  private Collection<? extends GrantedAuthority> authorities;
+  private Role role;
 
-  public UserDetailsImpl(String firstName, String lastName, String email, String password,
-                         Collection<? extends GrantedAuthority> authorities) {
-    this.firstName = firstName;
-    this.lastName = lastName;
+  public UserDetailsImpl(String username, String email, String password, Role role) {
+    this.username = username;
     this.email = email;
     this.password = password;
-    this.authorities = authorities;
+    this.role = role;
   }
 
   public static UserDetailsImpl build(User user) {
-    List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
     return new UserDetailsImpl(
-        user.getFirstName(),
-        user.getLastName(),
+        user.getUsername(),
         user.getEmail(),
         user.getPassword(),
-        authorities);
+        user.getRole());
   }
+
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return authorities;
+    return List.of(new SimpleGrantedAuthority(role.name()));
   }
 
   @Override

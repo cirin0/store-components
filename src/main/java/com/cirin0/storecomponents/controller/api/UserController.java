@@ -1,15 +1,15 @@
 package com.cirin0.storecomponents.controller.api;
 
 import com.cirin0.storecomponents.dto.UserDTO;
-import com.cirin0.storecomponents.dto.UserRequestDTO;
+import com.cirin0.storecomponents.dto.UserRegister;
 import com.cirin0.storecomponents.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -23,8 +23,8 @@ public class UserController {
 //    return "Please log in to access your user information";
 //  }
 
-  //@PreAuthorize("hasRole('ADMIN')")
-  @GetMapping
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/admin/all")
   ResponseEntity<List<UserDTO>> getAllUsers() {
     return ResponseEntity.ok(userService.getAllUsers());
   }
@@ -36,8 +36,8 @@ public class UserController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
-    UserDTO updatedUser = userService.updateUser(id, userRequestDTO);
+  public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserRegister userRegister) {
+    UserDTO updatedUser = userService.updateUser(id, userRegister);
     return ResponseEntity.ok(updatedUser);
   }
 

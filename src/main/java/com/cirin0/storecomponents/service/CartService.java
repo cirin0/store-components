@@ -38,9 +38,9 @@ public class CartService {
 
   public CartDTO createCart(Long userId) {
     Optional<UserDTO> userDTO = userRepository.findById(userId)
-        .map(UserMapper.INSTANCE::userToUserDTO);
+        .map(UserMapper.INSTANCE::toDTO);
     if (userDTO.isPresent()) {
-      User user = UserMapper.INSTANCE.userDTOToUser(userDTO.get());
+      User user = UserMapper.INSTANCE.userToEntity(userDTO.get());
       Cart cart = new Cart();
       cart.setUser(user);
       return CartMapper.INSTANCE.toDto(cartRepository.save(cart));

@@ -24,12 +24,16 @@ public class SecurityConfig {
 
   private final UserDetailsServiceImpl userDetailsService;
 
+  private BCryptPasswordEncoder encoder() {
+    return new BCryptPasswordEncoder();
+  }
+
   @Bean
   public DaoAuthenticationProvider daoAuthenticationProvider() {
-    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-    provider.setUserDetailsService(userDetailsService);
-    provider.setPasswordEncoder(new BCryptPasswordEncoder());
-    return provider;
+    DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
+    auth.setUserDetailsService(userDetailsService);
+    auth.setPasswordEncoder(encoder());
+    return auth;
   }
 
   @Bean
@@ -55,7 +59,7 @@ public class SecurityConfig {
 
          */
         .httpBasic(AbstractHttpConfigurer::disable)
-        .userDetailsService(userDetailsService)
+        //.userDetailsService(userDetailsService)
         .logout(Customizer.withDefaults());
 
     return http.build();

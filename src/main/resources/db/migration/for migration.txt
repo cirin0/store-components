@@ -114,3 +114,73 @@
        add constraint FK1mtsbur82frn64de7balymq9s
        foreign key (category_id)
        references category
+
+
+
+
+
+
+       INSERT INTO public.category (image_url, name)
+       VALUES (null, 'Оперативна пам''ять');
+
+       INSERT INTO public.category (image_url, name)
+       VALUES (null, 'Блоки живлення');
+
+       INSERT INTO public.category (image_url, name)
+       VALUES (null, 'Корпуси');
+
+       INSERT INTO public.category (image_url, name)
+       VALUES (null, 'Системи охолодження');
+
+       INSERT INTO public.category (image_url, name)
+       VALUES (null, 'Відеокарти');
+
+       INSERT INTO public.category (image_url, name)
+       VALUES ('https://s.ek.ua/jpg/jpg_katalog/preview_big/61.jpg', 'SSD-накопичувачі');
+
+       INSERT INTO public.category (image_url, name)
+       VALUES (null, 'Жорсткі диски');
+
+       INSERT INTO public.category (image_url, name)
+       VALUES (null, 'Термопасти та термопрокладки');
+
+UPDATE public.category
+SET image_url = 'https://s.ek.ua/jpg/jpg_katalog_ua/61.jpg'
+WHERE id = 8;
+
+UPDATE public.category
+SET image_url = 'https://s.ek.ua/jpg/jpg_katalog_ua/186.jpg'
+WHERE id = 2;
+
+UPDATE public.category
+SET image_url = 'https://s.ek.ua/jpg/jpg_katalog_ua/193.jpg'
+WHERE id = 5;
+
+UPDATE public.category
+SET image_url = 'https://s.ek.ua/jpg/jpg_katalog_ua/247.jpg'
+WHERE id = 10;
+
+UPDATE public.category
+SET image_url = 'https://s.ek.ua/jpg/jpg_katalog_ua/190.jpg'
+WHERE id = 9;
+
+UPDATE public.category
+SET image_url = 'https://s.ek.ua/jpg/jpg_katalog_ua/188.jpg'
+WHERE id = 3;
+
+UPDATE public.category
+SET image_url = 'https://s.ek.ua/jpg/jpg_katalog_ua/187.jpg'
+WHERE id = 1;
+
+UPDATE public.category
+SET image_url = 'https://s.ek.ua/jpg/jpg_katalog_ua/303.jpg'
+WHERE id = 6;
+
+UPDATE public.category
+SET image_url = 'https://s.ek.ua/jpg/jpg_katalog_ua/351.jpg'
+WHERE id = 4;
+
+UPDATE public.category
+SET image_url = 'https://s.ek.ua/jpg/jpg_katalog_ua/189.jpg'
+WHERE id = 7;
+

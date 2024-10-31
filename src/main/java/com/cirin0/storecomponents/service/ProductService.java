@@ -44,6 +44,11 @@ public class ProductService {
         .orElse(null);
   }
 
+  public List<ProductDTO> getProductsByCategoryId(Long id) {
+    List<Product> products = productRepository.findByCategoryId(id);
+    return productMapper.toDTOList(products);
+  }
+
   public ProductDTO createProduct(ProductDTO productDTO) {
     Product product = productMapper.toEntity(productDTO);
     return verifyAndUpsert(productDTO, product);

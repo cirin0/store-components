@@ -9,7 +9,9 @@ import com.cirin0.storecomponents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +31,10 @@ public class UserService {
     return users.stream()
         .map(userMapper::toDTO)
         .toList();
+  }
+
+  public List<User> allUsers() {
+    return new ArrayList<>(userRepository.findAll());
   }
 
   public UserDTO getUserById(Long id) {

@@ -102,7 +102,7 @@ Store Components — це онлайн-магазин для покупки ко
 
 ### Swagger UI
 
-Для перегляду та тестування API використовуйте [Swagger UI](http://localhost:8080/swagger-ui/index.html) на порті 8080.
+Для перегляду та тестування API використовуйте [Swagger UI](http://localhost:8080/swagger-ui/index.html) на порті 5000.
   
 
 

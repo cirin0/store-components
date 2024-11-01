@@ -1,6 +1,5 @@
 package com.cirin0.storecomponents.controller.web;
 
-import com.cirin0.storecomponents.dto.UserDTO;
 import com.cirin0.storecomponents.dto.UserRegister;
 import com.cirin0.storecomponents.service.UserService;
 import jakarta.validation.Valid;
@@ -21,28 +20,28 @@ public class AuthWebController {
   private final UserService userService;
 
   @GetMapping("/login")
-  public String showLoginPage(Model model) {
-//    UserRequestDTO userRequestDTO = new UserRequestDTO();
+  public String loginPage(Model model) {
+    UserRegister userRegister = new UserRegister();
     model.addAttribute("pageTitle", "Увійти");
-//    model.addAttribute("user", userRequestDTO);
+    model.addAttribute("user", userRegister);
     return "login";
   }
 
-//  @PostMapping("/login")
-//  public String loginUser(@ModelAttribute("user") @Valid UserRequestDTO userRequestDTO) {
-//    userService.login(userRequestDTO);
-//    return "redirect:/";
-//  }
+  @PostMapping("/login")
+  public String loginUser(@ModelAttribute("user") @Valid UserRegister userRegister) {
+    userService.loginUser(userRegister);
+    return "redirect:/";
+  }
 
-  @GetMapping("/registration")
-  public String showRegistrationPage(Model model) {
-    UserDTO userDto = new UserDTO();
+  @GetMapping("/register")
+  public String registerPage(Model model) {
+    UserRegister userRegister = new UserRegister();
     model.addAttribute("pageTitle", "Зареєструватися");
-    model.addAttribute("user", userDto);
+    model.addAttribute("user", userRegister);
     return "register";
   }
 
-  @PostMapping("/registration")
+  @PostMapping("/register")
   public String registerUser(@ModelAttribute("user") @Valid UserRegister userRegister, WebRequest request) {
     userService.createUser(userRegister);
     return "redirect:/auth/login";

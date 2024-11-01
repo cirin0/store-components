@@ -3,6 +3,7 @@ package com.cirin0.storecomponents.config;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,16 +23,16 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-  private BCryptPasswordEncoder encoder() {
+  private BCryptPasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 
   @Bean
-  public DaoAuthenticationProvider daoAuthenticationProvider() {
-    DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-    auth.setUserDetailsService(userDetailsService());
-    auth.setPasswordEncoder(encoder());
-    return auth;
+  public AuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider provide = new DaoAuthenticationProvider();
+    provide.setUserDetailsService(userDetailsService());
+    provide.setPasswordEncoder(passwordEncoder());
+    return provide;
   }
 
   @Bean
@@ -49,13 +50,10 @@ public class SecurityConfig {
             .requestMatchers("/", "/api/auth/**", "/api/categories", "/api/products").permitAll()
             .requestMatchers("/admin/**", "/api/users/admin/**", "/api/categories/").hasRole("ADMIN")
             .anyRequest().permitAll())
-        .formLogin(Customizer.withDefaults())
-        /*
+        //.formLogin(Customizer.withDefaults())
         .formLogin(form -> form
             .loginPage("/auth/login")
             .permitAll())
-
-         */
         .httpBasic(AbstractHttpConfigurer::disable)
         //.userDetailsService(userDetailsService)
         .logout(Customizer.withDefaults());

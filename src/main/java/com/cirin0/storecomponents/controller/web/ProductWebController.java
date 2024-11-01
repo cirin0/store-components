@@ -28,4 +28,12 @@ public class ProductWebController {
     model.addAttribute("pageTitle", productService.getProductById(id).getName());
     return "product-details";
   }
+
+  @GetMapping("/add-product")
+  public String showAddProductPage(Model model) {
+    //ProductDTO productDTO = new ProductDTO();
+    model.addAttribute("pageTitle", "Додати товар");
+    //model.addAttribute("product", productDTO);
+    return "add-product";
+  }
 }

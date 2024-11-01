@@ -3,20 +3,18 @@ package com.cirin0.storecomponents.config;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
 
 
 @Configuration
@@ -24,8 +22,17 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-  private final AuthenticationProvider authenticationProvider;
-  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  private BCryptPasswordEncoder encoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public DaoAuthenticationProvider daoAuthenticationProvider() {
+    DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
+    auth.setUserDetailsService(userDetailsService());
+    auth.setPasswordEncoder(encoder());
+    return auth;
+  }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,18 +49,14 @@ public class SecurityConfig {
             .requestMatchers("/", "/api/auth/**", "/api/categories", "/api/products").permitAll()
             .requestMatchers("/admin/**", "/api/users/admin/**", "/api/categories/").hasRole("ADMIN")
             .anyRequest().permitAll())
-        //.formLogin(Customizer.withDefaults())
+        .formLogin(Customizer.withDefaults())
         /*
         .formLogin(form -> form
             .loginPage("/auth/login")
             .permitAll())
 
          */
-        .sessionManagement(session -> session
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authenticationProvider(authenticationProvider)
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-        //.httpBasic(AbstractHttpConfigurer::disable)
+        .httpBasic(AbstractHttpConfigurer::disable)
         //.userDetailsService(userDetailsService)
         .logout(Customizer.withDefaults());
 
@@ -61,28 +64,13 @@ public class SecurityConfig {
   }
 
   @Bean
-  CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
+  public UserDetailsService userDetailsService() {
+    UserDetails user = User.withDefaultPasswordEncoder()
+        .username("admin")
+        .password("admin")
+        .roles("ADMIN")
+        .build();
 
-    configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-    configuration.setAllowCredentials(true);
-    configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-
-    return source;
+    return new InMemoryUserDetailsManager(user);
   }
-
-//  @Bean
-//  public UserDetailsService userDetailsService() {
-//    UserDetails user = User.withDefaultPasswordEncoder()
-//        .username("admin")
-//        .password("admin")
-//        .roles("ADMIN")
-//        .build();
-//
-//    return new InMemoryUserDetailsManager(user);
-//  }
 }

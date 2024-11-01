@@ -42,19 +42,15 @@ public class SecurityConfig {
         .headers(headers -> headers
             .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
         .authorizeHttpRequests(request -> request
-            .requestMatchers("/", "/products/**", "/products", "card/**", "/card",
-                "/login", "/products/card/add", "products/card/del", "/products/{id}",
-                "products/category/{categoryId}", "/category", "/card/del", "/card/add", "/h2-console/**",
-                "/auth/**", "/register", "/register-form", "/login-form"
-            ).permitAll()
-            .requestMatchers("/", "/api/auth/**", "/api/categories", "/api/products").permitAll()
-            .requestMatchers("/admin/**", "/api/users/admin/**", "/api/categories/").hasRole("ADMIN")
+            .requestMatchers("/", "/auth/login", "auth/register", "/api/categories/*", "/api/products/*")
+            .permitAll()
             .anyRequest().permitAll())
         //.formLogin(Customizer.withDefaults())
         .formLogin(form -> form
             .loginPage("/auth/login")
+            .successForwardUrl("/")
             .permitAll())
-        .httpBasic(AbstractHttpConfigurer::disable)
+        //.httpBasic(AbstractHttpConfigurer::disable)
         //.userDetailsService(userDetailsService)
         .logout(Customizer.withDefaults());
 

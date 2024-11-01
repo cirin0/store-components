@@ -5,6 +5,7 @@ import com.cirin0.storecomponents.service.CategoryService;
 import com.cirin0.storecomponents.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,7 @@ public class CategoryWebController {
     return "create-category";
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/new")
   public String createCategory(@ModelAttribute("category") @Valid CategoryRequest categoryRequest, WebRequest request) {
     categoryService.createCategory(categoryRequest);

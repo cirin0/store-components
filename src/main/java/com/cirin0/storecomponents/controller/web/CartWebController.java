@@ -1,9 +1,9 @@
 package com.cirin0.storecomponents.controller.web;
 
+import com.cirin0.storecomponents.dto.CartDTO;
 import com.cirin0.storecomponents.service.CartService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +17,10 @@ public class CartWebController {
   private final CartService cartService;
 
   @GetMapping
-  public String cart(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-    //model.addAttribute("pageTitle", "Кошик");
-    //model.addAttribute("cart", cartService.getCartById(userDetails.getUsername()));
+  public String cart(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+    CartDTO cart = cartService.getCart(userDetails.getId());
+    model.addAttribute("pageTitle", "Кошик");
+    double totalPrice = cartService.calculateTotalPrice(cart);
     return "cart";
   }
 

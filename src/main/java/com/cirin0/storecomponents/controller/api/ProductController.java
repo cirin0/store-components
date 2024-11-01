@@ -32,14 +32,10 @@ public class ProductController {
         .orElse(ResponseEntity.notFound().build());
   }
 
-  //TODO: За можливості додати отримання продуктів по категорією
-  /*
-  @GetMapping("/category/{categoryId}")
-  public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable Long categoryId) {
-    return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
+  @GetMapping("/category/{id}")
+  public ResponseEntity<List<ProductDTO>> getProductsByCategoryId(@PathVariable Long id) {
+    return ResponseEntity.ok(productService.getProductsByCategoryId(id));
   }
-
-   */
 
   @PostMapping
   public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {

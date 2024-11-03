@@ -1,18 +1,17 @@
-package com.cirin0.storecomponents.dto;
+package com.cirin0.storecomponents.dto.product;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 public class ProductDTO {
   private Long id;
   private String name;
-  private Double price;
-  private String description;
   private String imageUrl;
+  private String description;
+  private Double price;
   private LocalDateTime createdAt;
   private Long categoryId;
+  private String categoryName;
 }

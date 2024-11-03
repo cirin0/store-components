@@ -1,5 +1,6 @@
-package com.cirin0.storecomponents.dto;
+package com.cirin0.storecomponents.dto.category;
 
+import com.cirin0.storecomponents.dto.product.ProductDTO;
 import lombok.Data;
 
 import java.util.List;
@@ -9,5 +10,5 @@ public class CategoryDTO {
   private Long id;
   private String name;
   private String imageUrl;
-  private List<Long> productIds;
+  private List<ProductDTO> productIds;
 }

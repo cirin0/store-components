@@ -1,7 +1,7 @@
 package com.cirin0.storecomponents.controller.api;
 
-import com.cirin0.storecomponents.dto.CategoryDTO;
-import com.cirin0.storecomponents.dto.CategoryRequest;
+import com.cirin0.storecomponents.dto.category.CategoryCreate;
+import com.cirin0.storecomponents.dto.category.CategoryDTO;
 import com.cirin0.storecomponents.mapper.CategoryMapper;
 import com.cirin0.storecomponents.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -34,14 +34,14 @@ public class CategoryController {
   }
 
   @PostMapping
-  public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryRequest categoryRequest) {
-    CategoryDTO categoryDTO = categoryService.createCategory(categoryRequest);
+  public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryCreate categoryCreate) {
+    CategoryDTO categoryDTO = categoryService.createCategory(categoryCreate);
     return ResponseEntity.status(HttpStatus.CREATED).body(categoryDTO);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest) {
-    CategoryDTO categoryDTO = categoryService.updateCategory(id, categoryRequest);
+  public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryCreate categoryCreate) {
+    CategoryDTO categoryDTO = categoryService.updateCategory(id, categoryCreate);
     return ResponseEntity.ok(categoryDTO);
   }
 

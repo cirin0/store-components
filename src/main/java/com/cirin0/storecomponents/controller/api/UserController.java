@@ -1,7 +1,6 @@
 package com.cirin0.storecomponents.controller.api;
 
-import com.cirin0.storecomponents.dto.UserDTO;
-import com.cirin0.storecomponents.dto.UserRegister;
+import com.cirin0.storecomponents.dto.user.UserDTO;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -57,10 +56,10 @@ public class UserController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserRegister userRegister) {
-    UserDTO updatedUser = userService.updateUser(id, userRegister);
-    return ResponseEntity.ok(updatedUser);
-  }
+//  public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserRegister userRegister) {
+//    UserDTO updatedUser = userService.updateUser(id, userRegister);
+//    return ResponseEntity.ok(updatedUser);
+//  }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

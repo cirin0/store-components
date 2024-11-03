@@ -1,6 +1,6 @@
 package com.cirin0.storecomponents.controller.web;
 
-import com.cirin0.storecomponents.dto.UserRegister;
+import com.cirin0.storecomponents.dto.user.UserRegister;
 import com.cirin0.storecomponents.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

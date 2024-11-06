@@ -1,8 +1,6 @@
 package com.cirin0.storecomponents.controller.api;
 
-import com.cirin0.storecomponents.dto.CategoryDTO;
-import com.cirin0.storecomponents.dto.CategoryRequest;
-import com.cirin0.storecomponents.mapper.CategoryMapper;
+import com.cirin0.storecomponents.dto.category.CategoryDTO;
 import com.cirin0.storecomponents.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,9 +14,7 @@ import java.util.Optional;
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
-
   private final CategoryService categoryService;
-  private final CategoryMapper categoryMapper;
 
   @GetMapping
   public ResponseEntity<List<CategoryDTO>> getAllCategories() {
@@ -34,14 +30,15 @@ public class CategoryController {
   }
 
   @PostMapping
-  public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryRequest categoryRequest) {
-    CategoryDTO categoryDTO = categoryService.createCategory(categoryRequest);
+  public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
+    CategoryDTO createdCategory = categoryService.createCategory(categoryDTO);
     return ResponseEntity.status(HttpStatus.CREATED).body(categoryDTO);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest) {
-    CategoryDTO categoryDTO = categoryService.updateCategory(id, categoryRequest);
+  public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id,
+                                                    @RequestBody CategoryDTO categoryDTO) {
+    CategoryDTO updatedCategory = categoryService.updateCategory(id, categoryDTO);
     return ResponseEntity.ok(categoryDTO);
   }
 

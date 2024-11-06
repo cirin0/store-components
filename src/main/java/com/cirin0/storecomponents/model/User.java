@@ -2,16 +2,19 @@ package com.cirin0.storecomponents.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.Data;
-import lombok.Getter;
-import net.minidev.json.annotate.JsonIgnore;
+import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +26,6 @@ public class User {
   @Column(nullable = false) //unique = true,
   private String email;
 
-  @Getter
   @Column(nullable = false)
   @JsonIgnore
   private String password;
@@ -31,7 +33,7 @@ public class User {
   private LocalDateTime createdAt = LocalDateTime.now();
 
   @Enumerated(value = EnumType.STRING)
-  private Role role;
+  private Role role = Role.USER;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Order> orders;

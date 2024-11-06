@@ -1,6 +1,7 @@
 package com.cirin0.storecomponents.config;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -19,52 +20,53 @@ import org.springframework.security.web.SecurityFilterChain;
 
 
 @Configuration
-@AllArgsConstructor
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-  private BCryptPasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+//  @Bean
+//  public AuthenticationProvider authenticationProvider() {
+//    DaoAuthenticationProvider provide = new DaoAuthenticationProvider();
+//    provide.setUserDetailsService(userDetailsService());
+//    provide.setPasswordEncoder(passwordEncoder());
+//    return provide;
+//  }
 
-  @Bean
-  public AuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider provide = new DaoAuthenticationProvider();
-    provide.setUserDetailsService(userDetailsService());
-    provide.setPasswordEncoder(passwordEncoder());
-    return provide;
-  }
+
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .csrf(AbstractHttpConfigurer::disable)
-        .headers(headers -> headers
-            .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
         .authorizeHttpRequests(request -> request
-            .requestMatchers("/", "/auth/login", "auth/register", "/api/categories/*", "/api/products/*")
+            .requestMatchers("/", "/auth/login", "auth/register",
+                "/api/categories/*", "/api/products/*")
             .permitAll()
             .anyRequest().permitAll())
-        //.formLogin(Customizer.withDefaults())
         .formLogin(form -> form
             .loginPage("/auth/login")
-            .successForwardUrl("/")
+            .defaultSuccessUrl("/")
             .permitAll())
-        //.httpBasic(AbstractHttpConfigurer::disable)
-        //.userDetailsService(userDetailsService)
-        .logout(Customizer.withDefaults());
+        .logout(logout -> logout
+            .logoutSuccessUrl("/auth/login?logout")
+            .permitAll());
 
     return http.build();
   }
 
   @Bean
-  public UserDetailsService userDetailsService() {
-    UserDetails user = User.withDefaultPasswordEncoder()
-        .username("admin")
-        .password("admin")
-        .roles("ADMIN")
-        .build();
-
-    return new InMemoryUserDetailsManager(user);
+  public BCryptPasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
   }
+
+//  @Bean
+//  public UserDetailsService userDetailsService() {
+//    UserDetails user = User.withDefaultPasswordEncoder()
+//        .username("admin")
+//        .password("admin")
+//        .roles("ADMIN")
+//        .build();
+//
+//    return new InMemoryUserDetailsManager(user);
+//  }
 }

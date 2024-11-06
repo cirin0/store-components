@@ -1,7 +1,7 @@
 package com.cirin0.storecomponents.controller.api;
 
-import com.cirin0.storecomponents.dto.UserDTO;
-import com.cirin0.storecomponents.dto.UserRegister;
+import com.cirin0.storecomponents.dto.user.UserDTO;
+import com.cirin0.storecomponents.dto.user.UserUpdate;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,33 +21,10 @@ public class UserController {
 
   private final UserService userService;
 
-//  @GetMapping
-//  public String showNotLoggedInMessage() {
-//    return "Please log in to access your user information";
-//  }
-
-
-  @GetMapping("/me")
-  public ResponseEntity<User> authenticatedUser() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-    User currentUser = (User) authentication.getPrincipal();
-
-    return ResponseEntity.ok(currentUser);
-  }
-
-  @GetMapping("/allusers")
-  public ResponseEntity<List<User>> allUsers() {
-    List<User> users = userService.allUsers();
-
-    return ResponseEntity.ok(users);
-  }
-
-
-  @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/admin/all")
-  ResponseEntity<List<UserDTO>> getAllUsers() {
-    return ResponseEntity.ok(userService.getAllUsers());
+  @GetMapping
+  public ResponseEntity<List<UserDTO>> getAllUsers() {
+    List<UserDTO> userDTOList = userService.getAllUsers();
+    return ResponseEntity.ok(userDTOList);
   }
 
   @GetMapping("/{id}")
@@ -57,8 +34,8 @@ public class UserController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserRegister userRegister) {
-    UserDTO updatedUser = userService.updateUser(id, userRegister);
+  public ResponseEntity<UserUpdate> updateUser(@PathVariable Long id, @RequestBody UserUpdate userUpdate) {
+    UserUpdate updatedUser = userService.updateUser(id, userUpdate);
     return ResponseEntity.ok(updatedUser);
   }
 

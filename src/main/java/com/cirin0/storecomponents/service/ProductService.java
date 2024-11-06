@@ -1,6 +1,6 @@
 package com.cirin0.storecomponents.service;
 
-import com.cirin0.storecomponents.dto.ProductDTO;
+import com.cirin0.storecomponents.dto.product.ProductDTO;
 import com.cirin0.storecomponents.mapper.ProductMapper;
 import com.cirin0.storecomponents.model.Category;
 import com.cirin0.storecomponents.model.Product;
@@ -21,7 +21,7 @@ public class ProductService {
   private final CategoryRepository categoryRepository;
   private final ProductMapper productMapper;
 
-  private ProductDTO verifyAndUpsert(ProductDTO productDTO, Product product) { //
+  private ProductDTO verifyAndUpsert(ProductDTO productDTO, Product product) {
     if (productDTO.getCategoryId() != null) {
       Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
       if (categoryOptional.isEmpty()) {
@@ -30,23 +30,23 @@ public class ProductService {
       product.setCategory(categoryOptional.get());
     }
     Product savedProduct = productRepository.save(product);
-    return productMapper.toDTO(savedProduct);
+    return productMapper.toDto(savedProduct);
   }
 
   public List<ProductDTO> getAllProducts() {
     List<Product> products = productRepository.findAll();
-    return productMapper.toDTOList(products);
+    return productMapper.toDtoList(products);
   }
 
   public ProductDTO getProductById(Long id) {
     return productRepository.findById(id)
-        .map(productMapper::toDTO)
+        .map(productMapper::toDto)
         .orElse(null);
   }
 
   public List<ProductDTO> getProductsByCategoryId(Long id) {
     List<Product> products = productRepository.findByCategoryId(id);
-    return productMapper.toDTOList(products);
+    return productMapper.toDtoList(products);
   }
 
   public ProductDTO createProduct(ProductDTO productDTO) {
@@ -63,7 +63,7 @@ public class ProductService {
     if (productDTO.getPrice() != null) {
       product.setPrice(productDTO.getPrice());
     }
-    productMapper.updateProductFromDTO(productDTO, product);
+    productMapper.partialUpdate(productDTO, product);
     return verifyAndUpsert(productDTO, product);
   }
 

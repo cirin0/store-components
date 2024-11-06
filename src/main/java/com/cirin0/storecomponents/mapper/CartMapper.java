@@ -1,26 +1,15 @@
 package com.cirin0.storecomponents.mapper;
 
 import com.cirin0.storecomponents.dto.CartDTO;
-import com.cirin0.storecomponents.dto.CartItemDTO;
 import com.cirin0.storecomponents.model.Cart;
-import com.cirin0.storecomponents.model.CartItem;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.*;
 
-import java.util.List;
-
-@Mapper(componentModel = "spring")
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CartMapper {
-
-  CartMapper INSTANCE = Mappers.getMapper(CartMapper.class);
+  Cart toEntity(CartDTO cartDTO);
 
   CartDTO toDto(Cart cart);
 
-  Cart toEntity(CartDTO cartDTO);
-
-  CartItemDTO toDto(CartItem cartItem);
-
-  @Mapping(target = "cart", ignore = true)
-  CartItem toEntity(CartItemDTO cartItemDTO);
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  Cart partialUpdate(CartDTO cartDTO, @MappingTarget Cart cart);
 }

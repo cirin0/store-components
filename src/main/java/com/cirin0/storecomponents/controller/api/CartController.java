@@ -1,5 +1,6 @@
 package com.cirin0.storecomponents.controller.api;
 
+import com.cirin0.storecomponents.dto.AddToCartDTO;
 import com.cirin0.storecomponents.dto.CartDTO;
 import com.cirin0.storecomponents.dto.CartItemDTO;
 import com.cirin0.storecomponents.mapper.CartMapper;
@@ -25,24 +26,34 @@ public class CartController {
 
   @GetMapping
   public ResponseEntity<CartDTO> getCart(@RequestParam("userId") Long userId) { // @AuthenticationPrincipal User user
-    Optional<Cart> existingCart = cartRepository.findByUserId(userId);
-    return existingCart.map(cartMapper::toDto)
-        .map(ResponseEntity.status(201)::body)
-        .orElseGet(() -> ResponseEntity.notFound().build());
+    return ResponseEntity.ok(cartService.getCartByUserId(userId));
   }
 
-  @PostMapping("/items")
-  public CartDTO addItemToCart(@AuthenticationPrincipal User user, @RequestBody CartItemDTO cartItemDTO) {
-    return cartService.addItemsToCart(user.getId(), cartItemDTO.getProductId(), cartItemDTO.getQuantity());
+  @PostMapping("/add")
+  public ResponseEntity<CartDTO> addToCart(
+      @RequestParam("userId") Long userId,
+      @RequestBody AddToCartDTO addToCartDTO) {
+    return ResponseEntity.ok(cartService.addProductToCart(userId, addToCartDTO));
   }
 
-  @PutMapping("/items/{cartItemId}")
-  public ResponseEntity<CartDTO> updateCartItemQuantity(@RequestParam Long userId, @PathVariable Long cartItemId, @RequestParam int quantity) {
-    return ResponseEntity.ok(cartService.UpdateCartItemQuantity(userId, cartItemId, quantity));
+  @PutMapping("/update/{productId}")
+  public ResponseEntity<CartDTO> updateQuantity(
+      @AuthenticationPrincipal User user,
+      @PathVariable Long productId,
+      @RequestParam Integer quantity) {
+    return ResponseEntity.ok(cartService.updateCartItemQuantity(user.getId(), productId, quantity));
   }
 
-  @DeleteMapping("/items/{cartItemId}")
-  public void deleteItemFromCart(@RequestParam Long userId, @PathVariable Long cartItemId) {
-    cartService.deleteItemFromCart(userId, cartItemId);
+  @DeleteMapping("/remove/{productId}")
+  public ResponseEntity<CartDTO> removeFromCart(
+      @AuthenticationPrincipal User user,
+      @PathVariable Long productId) {
+    return ResponseEntity.ok(cartService.removeFromCart(user.getId(), productId));
+  }
+
+  @DeleteMapping("/clear")
+  public ResponseEntity<Void> clearCart(@AuthenticationPrincipal User user) {
+    cartService.clearCart(user.getId());
+    return ResponseEntity.noContent().build();
   }
 }

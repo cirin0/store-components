@@ -3,9 +3,16 @@ package com.cirin0.storecomponents.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 
-@Data
+
 @Entity
+@Table(name = "cart_item")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CartItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +26,12 @@ public class CartItem {
   @JoinColumn(name = "product_id")
   private Product product;
 
-  private int quantity;
+  private Integer quantity;
 
-  private double price;
+  private BigDecimal price;
 
-  public void updatePrice() {
-    price = product.getPrice() * quantity;
+  @Transient
+  public BigDecimal getTotalPrice() {
+    return price.multiply(BigDecimal.valueOf(quantity));
   }
 }

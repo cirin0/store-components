@@ -1,11 +1,13 @@
 package com.cirin0.storecomponents.controller.web;
 
+import com.cirin0.storecomponents.dto.product.ProductDTO;
 import com.cirin0.storecomponents.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -31,9 +33,15 @@ public class ProductWebController {
 
   @GetMapping("/add-product")
   public String showAddProductPage(Model model) {
-    //ProductDTO productDTO = new ProductDTO();
+    ProductDTO productDTO = new ProductDTO();
     model.addAttribute("pageTitle", "Додати товар");
-    //model.addAttribute("product", productDTO);
-    return "add-product";
+    model.addAttribute("product", productDTO);
+    return "create-product";
+  }
+
+  @PostMapping("/add-product")
+  public String addProduct(ProductDTO productDTO) {
+    productService.createProduct(productDTO);
+    return "redirect:/products";
   }
 }

@@ -1,13 +1,14 @@
 package com.cirin0.storecomponents.dto;
 
-import lombok.Data;
+import com.cirin0.storecomponents.dto.user.UserDTO;
+import lombok.*;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
 public class CartDTO {
-  private Long id;
-  private Long userId;
   private List<CartItemDTO> items;
-  private double totalPrice;
+  private BigDecimal totalPrice;
 }

@@ -11,14 +11,18 @@
 			<div class="card">
 				<div class="card-body">
 					<h3 class="card-title text-center">Register</h3>
-					<form th:action="@{/auth/register}" method="post" th:object="${user}">
+					<form th:action="@{/auth/register}" method="post">
 						<div class="mb-3">
 							<label for="username" class="form-label">Username</label>
-							<input type="text" class="form-control" id="username" th:field="*{username}" required>
+							<input type="text" class="form-control" id="username" required>
+						</div>
+						<div class="mb-3">
+							<label for="email" class="form-label">Email</label>
+							<input type="text" class="form-control" id="email" required>
 						</div>
 						<div class="mb-3">
 							<label for="password" class="form-label">Password</label>
-							<input type="password" class="form-control" id="password" th:field="*{password}" required>
+							<input type="password" class="form-control" id="password" required>
 						</div>
 						<button type="submit" class="btn btn-primary w-100">Register</button>
 					</form>

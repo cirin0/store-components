@@ -1,7 +1,6 @@
 package com.cirin0.storecomponents.controller.api;
 
-import com.cirin0.storecomponents.dto.ProductDTO;
-import com.cirin0.storecomponents.mapper.ProductMapper;
+import com.cirin0.storecomponents.dto.product.ProductDTO;
 import com.cirin0.storecomponents.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import java.util.Optional;
 public class ProductController {
 
   private final ProductService productService;
-  private final ProductMapper productMapper;
 
   @GetMapping
   public ResponseEntity<List<ProductDTO>> getAllProducts() {
@@ -44,13 +42,15 @@ public class ProductController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+  public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id,
+                                                  @RequestBody ProductDTO productDTO) {
     ProductDTO updatedProductDTO = productService.updateProduct(id, productDTO);
     return ResponseEntity.ok(updatedProductDTO);
   }
 
   @DeleteMapping("/{id}")
-  public void deleteProduct(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
     productService.deleteProduct(id);
+    return ResponseEntity.noContent().build();
   }
 }

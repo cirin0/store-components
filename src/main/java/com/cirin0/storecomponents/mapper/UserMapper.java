@@ -1,23 +1,25 @@
 package com.cirin0.storecomponents.mapper;
 
-import com.cirin0.storecomponents.dto.UserDTO;
-import com.cirin0.storecomponents.dto.UserRegister;
+import com.cirin0.storecomponents.dto.user.UserDTO;
+import com.cirin0.storecomponents.dto.user.UserRegister;
+import com.cirin0.storecomponents.dto.user.UserUpdate;
 import com.cirin0.storecomponents.model.User;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
-  UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+  User toEntity(UserDTO userDTO);
 
-  @Mapping(target = "role", source = "role", defaultValue = "USER")
-  UserDTO toDTO(User user);
+  UserDTO toDto(User user);
 
-  User userToEntity(UserDTO userDTO);
+  User toUpdateEntity(UserUpdate userUpdate);
 
-  //@Mapping(target = "id", ignore = true)
-  @Mapping(target = "createdAt", ignore = true)
-  @Mapping(target = "password", ignore = true)
-  User toEntity(UserRegister userRegister);
+  UserUpdate toUpdateDTO(User user);
+
+  User toRegisterEntity(UserRegister userRegister);
+
+  UserRegister toRegisterDTO(User user);
+
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  void partialUpdate(UserUpdate userUpdate, @MappingTarget User user);
 }

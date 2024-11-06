@@ -1,6 +1,6 @@
 package com.cirin0.storecomponents.controller.web;
 
-import com.cirin0.storecomponents.dto.CategoryRequest;
+import com.cirin0.storecomponents.dto.category.CategoryCreate;
 import com.cirin0.storecomponents.service.CategoryService;
 import com.cirin0.storecomponents.service.ProductService;
 import jakarta.validation.Valid;
@@ -37,16 +37,16 @@ public class CategoryWebController {
 
   @GetMapping("/new")
   public String showAddCategoryPage(Model model) {
-    CategoryRequest categoryRequest = new CategoryRequest();
+    CategoryCreate categoryCreate = new CategoryCreate();
     model.addAttribute("pageTitle", "Нова категорія");
-    model.addAttribute("category", categoryRequest);
+    model.addAttribute("category", categoryCreate);
     return "create-category";
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/new")
-  public String createCategory(@ModelAttribute("category") @Valid CategoryRequest categoryRequest, WebRequest request) {
-    categoryService.createCategory(categoryRequest);
+  public String createCategory(@ModelAttribute("category") @Valid CategoryCreate categoryCreate, WebRequest request) {
+    categoryService.createCategory(categoryCreate);
     request.setAttribute("message", "Категорію успішно створено", WebRequest.SCOPE_SESSION);
     return "redirect:/categories";
   }

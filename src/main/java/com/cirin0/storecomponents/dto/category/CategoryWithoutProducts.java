@@ -1,9 +1,9 @@
-package com.cirin0.storecomponents.dto;
+package com.cirin0.storecomponents.dto.category;
 
 import lombok.Data;
 
 @Data
-public class CategoryRequest {
+public class CategoryWithoutProducts {
   private Long id;
   private String name;
   private String imageUrl;

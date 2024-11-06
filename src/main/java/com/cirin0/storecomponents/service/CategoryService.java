@@ -1,7 +1,7 @@
 package com.cirin0.storecomponents.service;
 
-import com.cirin0.storecomponents.dto.CategoryDTO;
-import com.cirin0.storecomponents.dto.CategoryRequest;
+import com.cirin0.storecomponents.dto.category.CategoryCreate;
+import com.cirin0.storecomponents.dto.category.CategoryDTO;
 import com.cirin0.storecomponents.mapper.CategoryMapper;
 import com.cirin0.storecomponents.model.Category;
 import com.cirin0.storecomponents.repository.CategoryRepository;
@@ -29,19 +29,19 @@ public class CategoryService {
         .orElse(null);
   }
 
-  public CategoryDTO createCategory(CategoryRequest categoryRequest) {
-    Category category = categoryMapper.toEntity(categoryRequest);
+  public CategoryDTO createCategory(CategoryCreate categoryCreate) {
+    Category category = categoryMapper.toEntity(categoryCreate);
     Category savedCategory = categoryRepository.save(category);
     return categoryMapper.toDTO(savedCategory);
   }
 
-  public CategoryDTO updateCategory(Long id, CategoryRequest categoryRequest) {
+  public CategoryDTO updateCategory(Long id, CategoryCreate categoryCreate) {
     Optional<Category> categoryOptional = categoryRepository.findById(id);
     if (categoryOptional.isEmpty()) {
       throw new RuntimeException("Category not found with id " + id);
     }
     Category category = categoryOptional.get();
-    categoryMapper.updateCategoryFromDTO(categoryRequest, category);
+    categoryMapper.updateCategoryFromDTO(categoryCreate, category);
     Category updatedCategory = categoryRepository.save(category);
     return categoryMapper.toDTO(updatedCategory);
   }

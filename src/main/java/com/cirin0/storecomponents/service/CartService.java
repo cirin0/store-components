@@ -1,8 +1,8 @@
 package com.cirin0.storecomponents.service;
 
 import com.cirin0.storecomponents.dto.CartDTO;
-import com.cirin0.storecomponents.dto.ProductDTO;
-import com.cirin0.storecomponents.dto.UserDTO;
+import com.cirin0.storecomponents.dto.product.ProductDTO;
+import com.cirin0.storecomponents.dto.user.UserDTO;
 import com.cirin0.storecomponents.mapper.CartMapper;
 import com.cirin0.storecomponents.mapper.ProductMapper;
 import com.cirin0.storecomponents.mapper.UserMapper;
@@ -40,7 +40,7 @@ public class CartService {
     Optional<UserDTO> userDTO = userRepository.findById(userId)
         .map(UserMapper.INSTANCE::toDTO);
     if (userDTO.isPresent()) {
-      User user = UserMapper.INSTANCE.userToEntity(userDTO.get());
+      UserDTO user = UserMapper.INSTANCE.toDTO(userDTO.get());
       Cart cart = new Cart();
       cart.setUser(user);
       return CartMapper.INSTANCE.toDto(cartRepository.save(cart));

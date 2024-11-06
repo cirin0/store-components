@@ -1,15 +1,14 @@
 package com.cirin0.storecomponents.service;
 
-import com.cirin0.storecomponents.dto.UserDTO;
-import com.cirin0.storecomponents.dto.UserRegister;
+import com.cirin0.storecomponents.dto.user.UserDTO;
+import com.cirin0.storecomponents.dto.user.UserRegister;
+import com.cirin0.storecomponents.dto.user.UserUpdate;
 import com.cirin0.storecomponents.mapper.UserMapper;
-import com.cirin0.storecomponents.model.Role;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +44,12 @@ public class UserService {
     return userMapper.toDTO(user.get());
   }
 
-  public UserDTO createUser(UserRegister userRegister) {
+  public UserDTO registerUser(UserRegister userRegister) {
+    if (userRepository.existsByEmail(userRegister.getEmail())) {
+      throw new RuntimeException("Email is already taken");
+    }
     User user = userMapper.toEntity(userRegister);
     user.setPassword(encoder().encode(userRegister.getPassword()));
-    user.setRole(userRegister.getRole() == null ? Role.USER : userRegister.getRole());
     User savedUser = userRepository.save(user);
     return userMapper.toDTO(savedUser);
   }
@@ -62,15 +63,10 @@ public class UserService {
     return userMapper.toDTO(user);
   }
 
-  public UserDTO updateUser(Long id, UserRegister userRegister) {
-    Optional<User> userOptional = userRepository.findById(id);
-    if (userOptional.isEmpty()) {
-      throw new RuntimeException("User not found with id " + id);
-    }
-    User user = userOptional.get();
-    user.setEmail(userRegister.getEmail());
-    user.setPassword(encoder().encode(userRegister.getPassword()));
-    user.setRole(userRegister.getRole() == null ? Role.USER : userRegister.getRole());
+  public UserDTO updateUser(Long id, UserUpdate userUpdate) {
+    User user = userRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("User not found with id " + id));
+    userMapper.updateEntity(userUpdate, user);
     User updatedUser = userRepository.save(user);
     return userMapper.toDTO(updatedUser);
   }

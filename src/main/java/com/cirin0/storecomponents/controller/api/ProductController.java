@@ -1,6 +1,6 @@
 package com.cirin0.storecomponents.controller.api;
 
-import com.cirin0.storecomponents.dto.ProductDTO;
+import com.cirin0.storecomponents.dto.product.ProductDTO;
 import com.cirin0.storecomponents.mapper.ProductMapper;
 import com.cirin0.storecomponents.service.ProductService;
 import lombok.RequiredArgsConstructor;

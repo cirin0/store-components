@@ -74,3 +74,15 @@ footer {
     background-color: #f0f0f0; /* Змінюємо колір фону при наведенні */
     color: #007BFF; /* Змінюємо фон при наведенні */
 }
+
+.my-col-md {
+    width: 21.6%;
+}
+
+.card img {
+    padding: 5px;
+}
+
+/*.card-body {*/
+/*    flex: 0 1 auto;*/
+/*}*/

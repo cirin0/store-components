@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <header>
 	<nav class="header">
@@ -7,10 +7,25 @@
 			<li class="header__link"><a th:href="@{/}">Головна</a></li>
 			<li class="header__link"><a th:href="@{/products}">Товари</a></li>
 			<li class="header__link"><a th:href="@{/categories}">Категорії</a></li>
-			<li class="header__link"><a th:href="@{/cart}">Кошик</a></li>
-			<li class="header__link"><a th:href="@{/orders}">Замовлення</a></li>
-			<li class="header__link"><a th:href="@{/auth/register}">Реєстрація</a></li>
-			<li class="header__link"><a th:href="@{/auth/login}">Увійти</a></li>
+			<li class="header__link">
+				<a sec:authorize="isAuthenticated()" th:href="@{/cart}">Кошик</a>
+				<a sec:authorize="!isAuthenticated()" th:href="@{/auth/login}">Кошик</a>
+			</li>
+			<li class="header__link" sec:authorize="isAuthenticated()">
+				<a th:href="@{/orders}">Замовлення</a>
+			</li>
+			<li class="header__link" sec:authorize="!isAuthenticated()">
+				<a th:href="@{/auth/register}">Реєстрація</a>
+			</li>
+			<li class="header__link" sec:authorize="!isAuthenticated()">
+				<a th:href="@{/auth/login}">Увійти</a>
+			</li>
+			<li class="header__link" sec:authorize="isAuthenticated()">
+				<a th:href="@{/users/profile}">Профіль</a>
+			</li>
+			<li class="header__link" sec:authorize="isAuthenticated()">
+				<a th:href="@{/logout}">Вийти</a>
+			</li>
 		</ul>
 	</nav>
 </header>

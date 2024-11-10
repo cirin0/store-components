@@ -19,8 +19,14 @@
 						<h5 class="card-title" th:text="${product.name}">Назва продукту</h5>
 						<p class="card-text text-muted" th:text="'₴ ' + ${product.price}">Ціна</p>
 						<p class="card-text" th:text="${product.description}">Опис продукту</p>
-						<button class="btn btn-primary w-100 mt-4" th:onclick="'addToCart(' + ${product.id} + ')'">Додати в кошик
-						</button>
+						<form th:action="@{/cart/add}" method="post">
+							<input type="hidden" name="productId" th:value="${product.id}"/>
+							<div class="input-group mb-3">
+								<label for="quantity" class="input-group-text">Кількість</label>
+								<input type="number" class="form-control text-center" name="quantity" id="quantity" value="1" min="1"/>
+							</div>
+							<button type="submit" class="btn btn-primary w-100">Додати в кошик</button>
+						</form>
 					</div>
 				</div>
 			</div>

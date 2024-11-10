@@ -6,7 +6,7 @@
 <main class="container my-5">
 	<h1 class="text-center mb-4" th:text="${pageTitle}">Категорії</h1>
 	<div class="row justify-content-center">
-		<div class="col-md-4 mb-3" th:each="category : ${categories}">
+		<div class="col-md-2 mb-3 my-col-md" th:each="category : ${categories}">
 			<div class="card h-100">
 				<img th:src="${category.imageUrl}" class="card-img-top" alt="Category Image">
 				<div class="card-body text-center">

@@ -1,6 +1,7 @@
 package com.cirin0.storecomponents.controller.web;
 
 import com.cirin0.storecomponents.dto.product.ProductDTO;
+import com.cirin0.storecomponents.service.CategoryService;
 import com.cirin0.storecomponents.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -16,30 +17,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ProductWebController {
 
   private final ProductService productService;
+  private final CategoryService categoryService;
 
   @GetMapping
   public String getAllProducts(Model model) {
     model.addAttribute("products", productService.getAllProducts());
     model.addAttribute("pageTitle", "Список товарів");
-    return "product-list";
+    return "product/product-list";
   }
 
   @GetMapping("/{id}")
   public String getProductDetails(@PathVariable Long id, Model model) {
     model.addAttribute("product", productService.getProductById(id));
     model.addAttribute("pageTitle", productService.getProductById(id).getName());
-    return "product-details";
+    return "product/product-details";
   }
 
-  @GetMapping("/add-product")
+  @GetMapping("/new-product")
   public String showAddProductPage(Model model) {
     ProductDTO productDTO = new ProductDTO();
     model.addAttribute("pageTitle", "Додати товар");
     model.addAttribute("product", productDTO);
-    return "create-product";
+    model.addAttribute("categories", categoryService.getAllCategories());
+    return "product/create-product";
   }
 
-  @PostMapping("/add-product")
+  @PostMapping("/new-product")
   public String addProduct(ProductDTO productDTO) {
     productService.createProduct(productDTO);
     return "redirect:/products";

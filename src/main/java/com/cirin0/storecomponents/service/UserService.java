@@ -1,14 +1,17 @@
 package com.cirin0.storecomponents.service;
 
+import com.cirin0.storecomponents.dto.CartDTO;
 import com.cirin0.storecomponents.dto.user.UserDTO;
+import com.cirin0.storecomponents.dto.user.UserDetailsDTO;
 import com.cirin0.storecomponents.dto.user.UserRegister;
 import com.cirin0.storecomponents.dto.user.UserUpdate;
+import com.cirin0.storecomponents.mapper.CartMapper;
 import com.cirin0.storecomponents.mapper.UserMapper;
 import com.cirin0.storecomponents.model.Cart;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,7 +24,8 @@ public class UserService {
 
   private final UserMapper userMapper;
   private final UserRepository userRepository;
-  private final BCryptPasswordEncoder passwordEncoder;
+  private final PasswordEncoder passwordEncoder;
+  private final CartMapper cartMapper;
 
   public List<UserDTO> getAllUsers() {
     List<User> users = userRepository.findAll();
@@ -37,18 +41,22 @@ public class UserService {
   }
 
   public void registerUser(UserRegister userRegister) {
-    if (userRepository.existsByEmail(userRegister.getEmail())) {
-      throw new RuntimeException("Email is already taken");
-    }
     User user = userMapper.toRegisterEntity(userRegister);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
+    //user.setRole(Role.USER);
+    user.setCreatedAt(user.getCreatedAt());
     Cart cart = Cart.builder()
         .user(user)
         .totalPrice(BigDecimal.ZERO)
         .items(new ArrayList<>())
         .build();
     user.setCart(cart);
-    userMapper.toRegisterDTO(userRepository.save(user));
+    userRepository.save(user);
+  }
+
+  public User getCurrentUser(String email) {
+    return userRepository.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("User not found with email " + email));
   }
 
 //  public void loginUser(UserRegister userRegister) {
@@ -83,11 +91,18 @@ public class UserService {
     userRepository.deleteById(id);
   }
 
-  public UserRegister getUserByEmail(String username) {
-    User user = userRepository.findByEmail(username)
-        .orElseThrow(() -> new RuntimeException("User not found with email " + username));
-    return userMapper.toRegisterDTO(user);
+  public UserDetailsDTO getUserByEmail(String email) {
+    User user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("User not found with email " + email));
+    CartDTO cart = cartMapper.toDto(user.getCart());
+    return UserDetailsDTO.builder()
+        .id(user.getId())
+        .username(user.getUsername())
+        .email(user.getEmail())
+        .role(user.getRole())
+        .createdAt(user.getCreatedAt())
+        .cart(cart)
+        .orders(new ArrayList<>())
+        .build();
   }
-
-
 }

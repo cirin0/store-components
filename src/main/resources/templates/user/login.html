@@ -5,10 +5,14 @@
 <div th:replace="~{fragments/header :: header}"></div>
 <main class="container mt-5">
 	<div th:if="${param.error}">
-		Invalid username and password.
+		<p style="color:red">Invalid email or password</p>
 	</div>
 	<div th:if="${param.logout}">
 		You have been logged out.
+	</div>
+	<div>
+		<p>test123@gmail.com</p>
+		<p>Test2</p>
 	</div>
 	<div class="row justify-content-center">
 		<div class="col-md-4">
@@ -17,14 +21,14 @@
 					<h3 class="card-title text-center">Login</h3>
 					<form th:action="@{/auth/login}" method="post">
 						<div class="mb-3">
-							<label for="email" class="form-label">Email</label>
-							<input type="text" class="form-control" id="email" required>
+							<label for="username" class="form-label">Email</label>
+							<input type="email" class="form-control" id="username" name="username" required/>
 						</div>
 						<div class="mb-3">
 							<label for="password" class="form-label">Password</label>
-							<input type="password" class="form-control" id="password" required>
+							<input type="password" class="form-control" id="password" name="password" required/>
 						</div>
-						<button type="submit" class="btn btn-primary w-100">Login</button>
+						<input type="submit" class="btn btn-primary w-100" value="Login"/>
 					</form>
 					<div class="text-center mt-3">
 						<a href="/auth/register">Don't have an account? Register</a>

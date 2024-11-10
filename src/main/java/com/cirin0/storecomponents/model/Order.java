@@ -1,14 +1,18 @@
 package com.cirin0.storecomponents.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
 @Entity
 @Table(name = "orders")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Order {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +29,4 @@ public class Order {
 
   @Column(nullable = false)
   private LocalDateTime orderDate = LocalDateTime.now();
-
 }

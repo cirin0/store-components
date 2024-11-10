@@ -1,10 +1,15 @@
 package com.cirin0.storecomponents.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
 @Entity
+@Table(name = "order_item")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class OrderItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

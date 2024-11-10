@@ -13,6 +13,8 @@ import org.mapstruct.ReportingPolicy;
 public interface CartItemMapper {
   @Mapping(target = "productId", source = "product.id")
   @Mapping(target = "productName", source = "product.name")
+  @Mapping(target = "productPrice", source = "product.price")
+  @Mapping(target = "totalPrice", expression = "java(cartItem.getProductPrice().multiply(new java.math.BigDecimal(cartItem.getQuantity())))")
   CartItemDTO toDto(CartItem cartItem);
 
   AddToCartDTO toAddToCartDto(CartItem cartItem);

@@ -5,10 +5,10 @@
 <div th:replace="~{fragments/header :: header}"></div>
 <main class="container mt-4">
 	<h2>Shopping Cart</h2>
-	<div th:if="${cart.items.empty}" class="alert alert-info">
+	<div th:if="${#lists.isEmpty(cart)}" class="alert alert-info">
 		Your cart is empty. <a href="/" class="alert-link">Continue shopping</a>
 	</div>
-	<div th:unless="${cart.item.empty}" class="card">
+	<div th:unless="${#lists.isEmpty(cart)}" class="card">
 		<div class="card-body">
 			<div class="table-responsive">
 				<table class="table">
@@ -51,7 +51,7 @@
 					<tfoot>
 					<tr>
 						<td colspan="3" class="text-end"><strong>Cart Total:</strong></td>
-						<td th:text="${#numbers.formatCurrency(total)}">Total</td>
+						<td th:text="${#numbers.formatCurrency(cart.totalPrice)}">Total</td>
 						<td></td>
 					</tr>
 					</tfoot>

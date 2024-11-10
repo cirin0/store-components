@@ -7,7 +7,6 @@ import com.cirin0.storecomponents.mapper.CartMapper;
 import com.cirin0.storecomponents.mapper.ProductMapper;
 import com.cirin0.storecomponents.model.Cart;
 import com.cirin0.storecomponents.model.CartItem;
-import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.repository.CartItemRepository;
 import com.cirin0.storecomponents.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,29 +29,6 @@ public class CartService {
         .orElseThrow(() -> new RuntimeException("Cart not found " + id));
     return cartMapper.toDto(cart);
   }
-
-//  public CartDTO getCart(Long userId) {
-//    Cart cart = getOrCreateCart(userId);
-//    return cartMapper.toDto(cart);
-//  }
-//
-//  private Cart getOrCreateCart(Long userId) {
-//    return cartRepository.findByUserId(userId)
-//        .orElseGet(() -> {
-//          Cart newCart = new Cart();
-//          User user = new User();
-//          user.setId(userId);
-//          newCart.setUser(user);
-//          return cartRepository.save(newCart);
-//        });
-//  }
-
-  public CartDTO getCartById(Long id) {
-    Cart cart = cartRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Cart not found " + id));
-    return cartMapper.toDto(cart);
-  }
-
 
   public CartDTO addProductToCart(Long userId, AddToCartDTO addToCartDTO) {
     Cart cart = cartRepository.findByUserId(userId)
@@ -119,5 +95,4 @@ public class CartService {
     cart.setTotalPrice(BigDecimal.ZERO);
     cartRepository.save(cart);
   }
-
 }

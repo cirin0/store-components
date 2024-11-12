@@ -5,10 +5,10 @@
 <div th:replace="~{fragments/header :: header}"></div>
 <main class="container mt-4">
 	<h2>Shopping Cart</h2>
-	<div th:if="${#lists.isEmpty(cart)}" class="alert alert-info">
-		Your cart is empty. <a href="/" class="alert-link">Continue shopping</a>
+	<div th:if="${cart.items.isEmpty()}" class="alert alert-info">
+		Your cart is empty. <a href="/products" class="alert-link">Continue shopping</a>
 	</div>
-	<div th:unless="${#lists.isEmpty(cart)}" class="card">
+	<div th:unless="${cart.items.isEmpty()}" class="card">
 		<div class="card-body">
 			<div class="table-responsive">
 				<table class="table">

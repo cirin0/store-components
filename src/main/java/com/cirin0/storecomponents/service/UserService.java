@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class UserService {
     user.setCreatedAt(LocalDateTime.now());
     Cart cart = Cart.builder()
         .user(user)
-        .totalPrice(BigDecimal.ZERO)
+        .totalPrice(0.0)
         .items(new ArrayList<>())
         .build();
     user.setCart(cart);

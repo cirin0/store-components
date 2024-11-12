@@ -1,0 +1,5 @@
+ALTER TABLE cart
+    ALTER COLUMN total_price TYPE DOUBLE PRECISION;
+
+ALTER TABLE cart_item
+    DROP COLUMN IF EXISTS price;

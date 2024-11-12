@@ -3,9 +3,6 @@ package com.cirin0.storecomponents.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
-
-
 @Entity
 @Table(name = "cart_item")
 @Getter
@@ -27,11 +24,4 @@ public class CartItem {
   private Product product;
 
   private Integer quantity;
-
-  private BigDecimal price;
-
-  @Transient
-  public BigDecimal getTotalPrice() {
-    return price.multiply(BigDecimal.valueOf(quantity));
-  }
 }

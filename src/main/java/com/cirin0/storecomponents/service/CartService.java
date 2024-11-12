@@ -2,53 +2,63 @@ package com.cirin0.storecomponents.service;
 
 import com.cirin0.storecomponents.dto.AddToCartDTO;
 import com.cirin0.storecomponents.dto.CartDTO;
-import com.cirin0.storecomponents.dto.product.ProductDTO;
 import com.cirin0.storecomponents.mapper.CartMapper;
-import com.cirin0.storecomponents.mapper.ProductMapper;
 import com.cirin0.storecomponents.model.Cart;
 import com.cirin0.storecomponents.model.CartItem;
-import com.cirin0.storecomponents.repository.CartItemRepository;
+import com.cirin0.storecomponents.model.Product;
+import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.repository.CartRepository;
+import com.cirin0.storecomponents.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+import java.util.Optional;
 
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
   private final CartRepository cartRepository;
-  private final ProductService productService;
   private final CartMapper cartMapper;
-  private final ProductMapper productMapper;
-  private final CartItemRepository cartItemRepository;
+  private final ProductRepository productRepository;
 
-  public CartDTO getCartByUserId(Long id) {
-    Cart cart = cartRepository.findByUserId(id)
+  public CartDTO getCartById(Long id) {
+    Cart cart = cartRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Cart not found " + id));
     return cartMapper.toDto(cart);
   }
 
-  public CartDTO addProductToCart(Long userId, AddToCartDTO addToCartDTO) {
+  public CartDTO getCartByUserId(Long userId) {
     Cart cart = cartRepository.findByUserId(userId)
-        .orElseThrow(() -> new RuntimeException("Cart not found " + userId));
-    ProductDTO productDTO = productService.getProductById(addToCartDTO.getProductId());
-    CartItem cartItem = cartItemRepository
-        .findByCartIdAndProductId(cart.getId(), productDTO.getId())
         .orElseGet(() -> {
-          CartItem newItem = CartItem.builder()
-              .cart(cart)
-              .product(productMapper.toEntity(productDTO))
-              .price(BigDecimal.valueOf(productDTO.getPrice()))
-              .quantity(0)
-              .build();
-          cart.getItems().add(newItem);
-          return newItem;
+          Cart newCart = new Cart();
+          newCart.setUser(User.builder().id(userId).build());
+          return cartRepository.save(newCart);
         });
+    return cartMapper.toDto(cart);
+  }
 
-    cartItem.setQuantity(cartItem.getQuantity() + addToCartDTO.getQuantity());
-    cartItemRepository.save(cartItem);
+  public CartDTO addToCart(Long userId, AddToCartDTO addToCartDTO) {
+    Cart cart = cartRepository.findByUserId(userId)
+        .orElseGet(() -> {
+          Cart newCart = new Cart();
+          newCart.setUser(User.builder().id(userId).build());
+          return cartRepository.save(newCart);
+        });
+    Product product = productRepository.findById(addToCartDTO.getProductId())
+        .orElseThrow(() -> new RuntimeException("Product not found " + addToCartDTO.getProductId()));
+    Optional<CartItem> existingItem = cart.getItems().stream()
+        .filter(item -> item.getProduct().getId().equals(addToCartDTO.getProductId()))
+        .findFirst();
+    if (existingItem.isPresent()) {
+      existingItem.get().setQuantity(existingItem.get().getQuantity() + addToCartDTO.getQuantity());
+    } else {
+      CartItem newItem = new CartItem();
+      newItem.setCart(cart);
+      newItem.setProduct(product);
+      newItem.setQuantity(addToCartDTO.getQuantity());
+      cart.getItems().add(newItem);
+    }
     cart.recalculateTotal();
     cartRepository.save(cart);
     return cartMapper.toDto(cart);
@@ -57,42 +67,30 @@ public class CartService {
   public CartDTO updateCartItemQuantity(Long userId, Long productId, Integer quantity) {
     Cart cart = cartRepository.findByUserId(userId)
         .orElseThrow(() -> new RuntimeException("Cart not found " + userId));
-    CartItem cartItem = cartItemRepository
-        .findByCartIdAndProductId(cart.getId(), productId)
+    CartItem cartItem = cart.getItems().stream()
+        .filter(item -> item.getProduct().getId().equals(productId))
+        .findFirst()
         .orElseThrow(() -> new RuntimeException("Product not found in cart"));
-
-    if (quantity > 0) {
-      cartItem.setQuantity(quantity);
-      cartItemRepository.save(cartItem);
-    } else {
-      cart.getItems().remove(cartItem);
-      cartItemRepository.delete(cartItem);
-    }
+    cartItem.setQuantity(quantity);
     cart.recalculateTotal();
+    cartRepository.save(cart);
     return cartMapper.toDto(cart);
   }
 
-//  public CartDTO removeProductFromCart(Long userId, Long productId) {
-//    Cart cart = getOrCreateCart(userId);
-//    CartItem cartItem = cartItemRepository
-//        .findByCartIdAndProductId(cart.getId(), productId)
-//        .orElseThrow(() -> new RuntimeException("Product not found in cart"));
-//    cart.getItems().remove(cartItem);
-//    cartItemRepository.delete(cartItem);
-//    cart.recalculateTotal();
-//    return cartMapper.toDto(cart);
-//  }
-
   public CartDTO removeFromCart(Long userId, Long productId) {
-    return updateCartItemQuantity(userId, productId, 0);
+    Cart cart = cartRepository.findByUserId(userId)
+        .orElseThrow(() -> new RuntimeException("Cart not found " + userId));
+    cart.getItems().removeIf(item -> item.getProduct().getId().equals(productId));
+    cart.recalculateTotal();
+    cartRepository.save(cart);
+    return cartMapper.toDto(cart);
   }
 
   public void clearCart(Long userId) {
     Cart cart = cartRepository.findByUserId(userId)
         .orElseThrow(() -> new RuntimeException("Cart not found " + userId));
-    cartItemRepository.deleteAll(cart.getItems());
     cart.getItems().clear();
-    cart.setTotalPrice(BigDecimal.ZERO);
+    cart.setTotalPrice(0.0);
     cartRepository.save(cart);
   }
 }

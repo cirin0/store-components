@@ -8,6 +8,7 @@ import com.cirin0.storecomponents.dto.user.UserUpdate;
 import com.cirin0.storecomponents.mapper.CartMapper;
 import com.cirin0.storecomponents.mapper.UserMapper;
 import com.cirin0.storecomponents.model.Cart;
+import com.cirin0.storecomponents.model.Role;
 import com.cirin0.storecomponents.model.User;
 import com.cirin0.storecomponents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +45,8 @@ public class UserService {
   public void registerUser(UserRegister userRegister) {
     User user = userMapper.toRegisterEntity(userRegister);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    //user.setRole(Role.USER);
-    user.setCreatedAt(user.getCreatedAt());
+    user.setRole(Role.USER);
+    user.setCreatedAt(LocalDateTime.now());
     Cart cart = Cart.builder()
         .user(user)
         .totalPrice(BigDecimal.ZERO)

@@ -31,7 +31,8 @@
 					</div>
 					<div class="mb-4">
 						<label class="fw-bold">Cart:</label>
-						<p class="mb-2" th:text="${user.cart}"></p>'
+						<p class="mb-2" th:text="${user.cart.getItems()}"></p>
+						<p class="mb-2" th:text="${user.cart.getTotalPrice()}"></p>
 					</div>
 					<div class="mb-4">
 						<label class="fw-bold">Orders:</label>

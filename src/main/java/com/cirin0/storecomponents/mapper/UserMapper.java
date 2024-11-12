@@ -17,8 +17,6 @@ public interface UserMapper {
   UserUpdate toUpdateDTO(User user);
 
   @Mapping(target = "id", ignore = true)
-  @Mapping(target = "role", constant = "USER")
-  @Mapping(target = "createdAt", constant = "java.time.LocalDateTime.now()")
   User toRegisterEntity(UserRegister userRegister);
 
   UserRegister toRegisterDTO(User user);

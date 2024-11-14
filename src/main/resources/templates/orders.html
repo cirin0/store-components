@@ -3,10 +3,32 @@
 <head th:replace="~{fragments/head :: head}"></head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<main class="container">
-	<h1 style="font-size: 40px;">Замовлення</h1>
+<main class="container mt-4">
+	<h2>Замовлення</h2>
 	<div th:if="${#lists.isEmpty(orders)}">
 		<h2>Замовлення відсутні</h2>
+	</div>
+	<div th:unless="${#lists.isEmpty(orders)}">
+		<table class="table">
+			<thead>
+			<tr>
+				<th>Номер замовлення</th>
+				<th>Сума замовлення</th>
+				<th>Дата замовлення</th>
+				<th></th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="order : ${orders}">
+				<td th:text="${order.id}">Номер замовлення</td>
+				<td th:text="'₴ ' +${order.totalPrice}">Сума замовлення</td>
+				<td th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy')}">Дата замовлення</td>
+				<td>
+					<a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-primary">Детальніше</a>
+				</td>
+			</tr>
+			</tbody>
+		</table>
 	</div>
 </main>
 <div th:replace="~{fragments/footer :: footer}"></div>

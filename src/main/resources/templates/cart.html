@@ -4,9 +4,8 @@
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 <main class="container mt-4">
-	<h2>Shopping Cart</h2>
 	<div th:if="${cart.items.isEmpty()}" class="alert alert-info">
-		Your cart is empty. <a href="/products" class="alert-link">Continue shopping</a>
+		Ваш кошик пустий <a href="/products" class="alert-link">Продовжити покупки</a>
 	</div>
 	<div th:unless="${cart.items.isEmpty()}" class="card">
 		<div class="card-body">
@@ -14,44 +13,44 @@
 				<table class="table">
 					<thead>
 					<tr>
-						<th>Product</th>
-						<th>Price</th>
-						<th>Quantity</th>
-						<th>Total</th>
-						<th>Action</th>
+						<th>Товар</th>
+						<th>Ціна</th>
+						<th>Кількість</th>
+						<th>Сума</th>
+						<th></th>
 					</tr>
 					</thead>
 					<tbody>
 					<tr th:each="item : ${cart.items}">
-						<td th:text="${item.productName}">Product Name</td>
-						<td th:text="${#numbers.formatCurrency(item.price)}">Price</td>
+						<td th:text="${item.productName}">Назва продукту</td>
+						<td th:text="'₴ ' +${item.price}">Ціна</td>
 						<td>
-							<form th:action="@{/api/cart/products/{productId}(productId=${item.productId})}"
+							<form th:action="@{/cart/update-product-quantity/{productId}(productId=${item.productId})}"
 										method="post"
-										class="d-flex align-items-center">
+										class="d-flex justify-content-center">
 								<input type="number"
 											 name="quantity"
 											 th:value="${item.quantity}"
 											 min="1"
 											 class="form-control form-control-sm me-2"
 											 style="width: 70px">
-								<button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+								<button type="submit" class="btn btn-sm btn-outline-primary">Оновити</button>
 							</form>
 						</td>
-						<td th:text="${#numbers.formatCurrency(item.price * item.quantity)}">Total</td>
+						<td th:text="'₴ ' +${item.price * item.quantity}">Сума</td>
 						<td>
-							<form th:action="@{/api/cart/products/{productId}(productId=${item.productId})}"
+							<form th:action="@{/cart/remove-product/{productId}(productId=${item.productId})}"
 										method="post"
 										th:method="delete">
-								<button type="submit" class="btn btn-danger btn-sm">Remove</button>
+								<button type="submit" class="btn btn-danger btn-sm">Видалити</button>
 							</form>
 						</td>
 					</tr>
 					</tbody>
 					<tfoot>
 					<tr>
-						<td colspan="3" class="text-end"><strong>Cart Total:</strong></td>
-						<td th:text="${#numbers.formatCurrency(cart.totalPrice)}">Total</td>
+						<td colspan="3" class="text-end"><strong>Сума кошика</strong></td>
+						<td th:text="'₴ ' +${cart.totalPrice}">Сума</td>
 						<td></td>
 					</tr>
 					</tfoot>
@@ -59,8 +58,13 @@
 			</div>
 
 			<div class="d-flex justify-content-between mt-3">
-				<a href="/" class="btn btn-outline-primary">Continue Shopping</a>
-				<button class="btn btn-success">Proceed to Checkout</button>
+				<a href="/products" class="btn btn-outline-primary">Продовжити покупки</a>
+				<form th:action="@{/cart/clear-cart}" method="post">
+					<button type="submit" class="btn btn-outline-danger">Очисти кошик</button>
+				</form>
+				<form th:action="@{/orders/create-order}" method="post">
+					<button type="submit" class="btn btn-primary">Оформити замовлення</button>
+				</form>
 			</div>
 		</div>
 	</div>

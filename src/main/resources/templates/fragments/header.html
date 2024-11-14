@@ -21,7 +21,7 @@
 				<a th:href="@{/auth/login}">Увійти</a>
 			</li>
 			<li class="header__link" sec:authorize="isAuthenticated()">
-				<a th:href="@{/users/profile}">Профіль</a>
+				<a th:href="@{/user/profile}">Профіль</a>
 			</li>
 			<li class="header__link" sec:authorize="isAuthenticated()">
 				<a th:href="@{/logout}">Вийти</a>

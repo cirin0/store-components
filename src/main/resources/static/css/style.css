@@ -83,6 +83,14 @@ footer {
     padding: 5px;
 }
 
+.product-center {
+    align-items: center !important;
+}
+
+/*.row {*/
+/*    align-items: center !important;*/
+/*}*/
+
 /*.card-body {*/
 /*    flex: 0 1 auto;*/
 /*}*/

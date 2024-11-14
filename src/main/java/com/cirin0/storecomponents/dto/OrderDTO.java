@@ -9,7 +9,7 @@ import java.util.List;
 public class OrderDTO {
   private Long id;
   private Long userId;
-  private List<CartItemDTO> items;
-  private double totalPrice;
+  private List<OrderItemDTO> items;
+  private Double totalPrice;
   private LocalDateTime orderDate;
 }

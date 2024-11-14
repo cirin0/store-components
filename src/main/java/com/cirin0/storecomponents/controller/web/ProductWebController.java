@@ -1,8 +1,12 @@
 package com.cirin0.storecomponents.controller.web;
 
+import com.cirin0.storecomponents.dto.AddToCartDTO;
 import com.cirin0.storecomponents.dto.product.ProductDTO;
+import com.cirin0.storecomponents.dto.user.UserDetailsDTO;
+import com.cirin0.storecomponents.service.CartService;
 import com.cirin0.storecomponents.service.CategoryService;
 import com.cirin0.storecomponents.service.ProductService;
+import com.cirin0.storecomponents.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/products")
 @RequiredArgsConstructor
@@ -18,6 +24,8 @@ public class ProductWebController {
 
   private final ProductService productService;
   private final CategoryService categoryService;
+  private final UserService userService;
+  private final CartService cartService;
 
   @GetMapping
   public String getAllProducts(Model model) {
@@ -45,6 +53,14 @@ public class ProductWebController {
   @PostMapping("/new-product")
   public String addProduct(ProductDTO productDTO) {
     productService.createProduct(productDTO);
+    return "redirect:/products";
+  }
+
+  @PostMapping("cart/add-product")
+  public String addProductToCart(Principal authentication, AddToCartDTO addToCartDTO, Model model) {
+    UserDetailsDTO user = userService.getUserByEmail(authentication.getName());
+    cartService.addToCart(user.getId(), addToCartDTO);
+    model.addAttribute("message", "Товар додано до кошика");
     return "redirect:/products";
   }
 }

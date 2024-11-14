@@ -61,23 +61,12 @@ public class UserService {
         .orElseThrow(() -> new RuntimeException("User not found with email " + email));
   }
 
-//  public void loginUser(UserRegister userRegister) {
-//    User user = userRepository.findByEmail(userRegister.getEmail())
-//        .orElseThrow(() -> new RuntimeException("User not found with email " + userRegister.getEmail()));
-//    if (!passwordEncoder.matches(userRegister.getPassword(), user.getPassword())) {
-//      throw new RuntimeException("Invalid password");
-//    }
-////    UserRegister userDTO = userMapper.toRegisterDTO(user);
-//  }
-
-//  public UserDTO loginUser(UserRegister userRegister) {
-//    User user = userRepository.findByEmail(userRegister.getEmail())
-//        .orElseThrow(() -> new RuntimeException("User not found with email " + userRegister.getEmail()));
-//    if (!encoder().matches(userRegister.getPassword(), user.getPassword())) {
-//      throw new RuntimeException("Invalid password");
-//    }
-//    return userMapper.toDTO(user);
-//  }
+  public void changeRoleAdmin(Long id) {
+    User user = userRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("User not found with id " + id));
+    user.setRole(Role.ADMIN);
+    userRepository.save(user);
+  }
 
   public UserUpdate updateUser(Long id, UserUpdate userUpdate) {
     User user = userRepository.findById(id)

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,11 +23,16 @@ public class Order {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<CartItem> items;
+  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<OrderItem> items = new ArrayList<>();
 
-  private double totalPrice;
+  private Double totalPrice;
 
   @Column(nullable = false)
-  private LocalDateTime orderDate = LocalDateTime.now();
+  private LocalDateTime orderDate;
+
+  @PrePersist
+  protected void onCreate() {
+    this.orderDate = LocalDateTime.now();
+  }
 }

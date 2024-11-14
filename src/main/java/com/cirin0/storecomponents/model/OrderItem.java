@@ -23,7 +23,7 @@ public class OrderItem {
   @JoinColumn(name = "product_id", nullable = false)
   private Product product;
 
-  private int quantity;
+  private Integer quantity;
 
-  private double price;
+  private Double price;
 }

@@ -1,6 +1,5 @@
 package com.cirin0.storecomponents.controller.web;
 
-import com.cirin0.storecomponents.dto.category.CategoryDTO;
 import com.cirin0.storecomponents.service.CategoryService;
 import com.cirin0.storecomponents.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -31,20 +30,4 @@ public class CategoryWebController {
     model.addAttribute("products", productService.getProductsByCategoryId(id));
     return "category/category-detail";
   }
-
-  @GetMapping("/new-category")
-  public String showAddCategoryPage(Model model) {
-    CategoryDTO categoryCreate = new CategoryDTO();
-    model.addAttribute("pageTitle", "Нова категорія");
-    model.addAttribute("category", categoryCreate);
-    return "category/create-category";
-  }
-
-  //@PreAuthorize("hasRole('ADMIN')")
-  @PostMapping("/new-category")
-  public String createCategory(@ModelAttribute("category") CategoryDTO categoryDTO) {
-    categoryService.createCategory(categoryDTO);
-    return "redirect:/categories";
-  }
-
 }

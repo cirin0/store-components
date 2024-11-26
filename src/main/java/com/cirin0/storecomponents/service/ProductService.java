@@ -1,6 +1,8 @@
 package com.cirin0.storecomponents.service;
 
+import com.cirin0.storecomponents.dto.category.CategoryDTO;
 import com.cirin0.storecomponents.dto.product.ProductDTO;
+import com.cirin0.storecomponents.mapper.CategoryMapper;
 import com.cirin0.storecomponents.mapper.ProductMapper;
 import com.cirin0.storecomponents.model.Category;
 import com.cirin0.storecomponents.model.Product;
@@ -20,6 +22,8 @@ public class ProductService {
   private final ProductRepository productRepository;
   private final CategoryRepository categoryRepository;
   private final ProductMapper productMapper;
+  private final CategoryService categoryService;
+  private final CategoryMapper categoryMapper;
 
   private ProductDTO verifyAndUpsert(ProductDTO productDTO, Product product) {
     if (productDTO.getCategoryId() != null) {
@@ -56,21 +60,26 @@ public class ProductService {
   }
 
   public ProductDTO createProduct(ProductDTO productDTO) {
+    CategoryDTO category = categoryService.getCategoryById(productDTO.getCategoryId());
     Product product = productMapper.toEntity(productDTO);
-    return verifyAndUpsert(productDTO, product);
+    product.setCategory(Category.builder()
+        .id(category.getId())
+        .name(category.getName())
+        .build());
+    Product savedProduct = productRepository.save(product);
+    return productMapper.toDto(savedProduct);
   }
 
   public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
-    Optional<Product> productOptional = productRepository.findById(id);
-    if (productOptional.isEmpty()) {
-      throw new IllegalArgumentException("Product not found with id " + id);
-    }
-    Product product = productOptional.get();
-    if (productDTO.getPrice() != null) {
-      product.setPrice(productDTO.getPrice());
-    }
-    productMapper.partialUpdate(productDTO, product);
-    return verifyAndUpsert(productDTO, product);
+    Product product = productRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Product not found with id " + id));
+    CategoryDTO categoryDTO = categoryService.getCategoryById(productDTO.getCategoryId());
+    Product updatedProduct = productMapper.partialUpdate(productDTO, product);
+    product.setCategory(Category.builder()
+        .id(categoryDTO.getId())
+        .name(categoryDTO.getName())
+        .build());
+    return productMapper.toDto(productRepository.save(updatedProduct));
   }
 
   public void deleteProduct(Long id) {

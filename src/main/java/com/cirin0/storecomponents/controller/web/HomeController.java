@@ -16,7 +16,6 @@ public class HomeController {
   private final CategoryService categoryService;
   private final ProductService productService;
 
-
   @GetMapping
   public String homePage(Model model) {
     model.addAttribute("pageTitle", "Інтернет-магазин");

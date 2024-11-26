@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<main class="container mt-4">
+	<h1 class="mb-4">Управління категоріями</h1>
+	<a href="/admin/categories/add" class="btn btn-primary mb-4">Додати нову категорію</a>
+	<table class="table table-striped table-hover">
+		<thead class="table-dark">
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Image</th>
+			<th>Actions</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr th:each="category : ${categories}">
+			<td th:text="${category.id}"></td>
+			<td th:text="${category.name}"></td>
+			<td>
+				<img th:src="${category.imageUrl}" alt="" style="width: 100px; height: 100px;">
+			</td>
+			<td>
+				<a th:href="@{/admin/categories/{id}/edit(id=${category.id})}"
+					 class="btn btn-sm btn-warning me-2">Редагувати</a>
+				<a th:href="@{/admin/categories/{id}/delete(id=${category.id})}"
+					 class="btn btn-sm btn-danger"
+					 onclick="return confirm('Are you sure?')">Видалити</a>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+				integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+				crossorigin="anonymous"></script>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

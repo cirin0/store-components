@@ -16,6 +16,9 @@
 				<p><strong>Ім'я:</strong> <span th:text="${user.username}">Ім'я користувача</span></p>
 				<p><strong>Email:</strong> <span th:text="${user.email}">Email користувача</span></p>
 				<p><strong>Роль:</strong> <span th:text="${user.role}">Роль користувача</span></p>
+				<div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+					<a href="/admin" class="btn btn-primary">Admin Panel</a>
+				</div>
 			</div>
 
 			<div class="mt-4 text-center">

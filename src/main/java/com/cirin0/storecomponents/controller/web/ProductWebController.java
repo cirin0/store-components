@@ -1,10 +1,8 @@
 package com.cirin0.storecomponents.controller.web;
 
 import com.cirin0.storecomponents.dto.AddToCartDTO;
-import com.cirin0.storecomponents.dto.product.ProductDTO;
 import com.cirin0.storecomponents.dto.user.UserDetailsDTO;
 import com.cirin0.storecomponents.service.CartService;
-import com.cirin0.storecomponents.service.CategoryService;
 import com.cirin0.storecomponents.service.ProductService;
 import com.cirin0.storecomponents.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +21,6 @@ import java.security.Principal;
 public class ProductWebController {
 
   private final ProductService productService;
-  private final CategoryService categoryService;
   private final UserService userService;
   private final CartService cartService;
 
@@ -39,21 +36,6 @@ public class ProductWebController {
     model.addAttribute("product", productService.getProductById(id));
     model.addAttribute("pageTitle", productService.getProductById(id).getName());
     return "product/product-details";
-  }
-
-  @GetMapping("/new-product")
-  public String showAddProductPage(Model model) {
-    ProductDTO productDTO = new ProductDTO();
-    model.addAttribute("pageTitle", "Додати товар");
-    model.addAttribute("product", productDTO);
-    model.addAttribute("categories", categoryService.getAllCategories());
-    return "product/create-product";
-  }
-
-  @PostMapping("/new-product")
-  public String addProduct(ProductDTO productDTO) {
-    productService.createProduct(productDTO);
-    return "redirect:/products";
   }
 
   @PostMapping("cart/add-product")

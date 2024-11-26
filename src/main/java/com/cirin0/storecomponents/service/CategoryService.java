@@ -37,7 +37,7 @@ public class CategoryService {
     Category category = categoryRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Category not found with id " + id));
     Category updatedCategory = categoryMapper.partialUpdate(categoryDTO, category);
-    return categoryMapper.toDto(updatedCategory);
+    return categoryMapper.toDto(categoryRepository.save(updatedCategory));
   }
 
   public void deleteCategory(Long id) {

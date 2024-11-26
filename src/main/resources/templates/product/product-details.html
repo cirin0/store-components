@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ua" xmlns:th="http://www.thymeleaf.org">
+<html lang="ua" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/head :: head}"></head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -30,7 +30,13 @@
 								<label for="quantity" class="input-group-text">Кількість</label>
 								<input type="number" class="form-control text-center" name="quantity" id="quantity" value="1" min="1"/>
 							</div>
-							<button type="submit" class="btn btn-primary w-100">Додати в кошик</button>
+							<div th:if="${#authorization.expression('isAuthenticated()')}">
+								<button type="submit" class="btn btn-primary">Додати в кошик</button>
+							</div>
+							<div th:if="${#authorization.expression('!isAuthenticated()')}">
+								<p class="text-muted">Увійдіть для додавання в кошик</p>
+								<button type="button" class="btn btn-primary" disabled>Додати в кошик</button>
+							</div>
 						</form>
 					</div>
 				</div>

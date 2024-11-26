@@ -41,7 +41,7 @@ public class SecurityConfig {
                 "/api/categories/*", "/api/products/*")
             .permitAll()
             .requestMatchers("/admin/**").hasRole("ADMIN")
-            .anyRequest().authenticated())
+            .anyRequest().permitAll())
         .formLogin(form -> form
             .loginPage("/auth/login")
             .loginProcessingUrl("/auth/login")

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+//@PreAuthorize("hasRole('ADMIN')")
 public class AdminWebController {
   private final CategoryService categoryService;
   private final ProductService productService;
